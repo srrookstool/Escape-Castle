@@ -73,3 +73,16 @@ class Challenge():
     
     def completeChallenge(self):
         pass
+    
+class Room():
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.objects = []
+        self.challenges = []
+        self.clues = []
+    
+    def enterRoom(self):
+        pass
+    def attemptExit(self):
+        pass
