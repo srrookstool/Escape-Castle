@@ -1,3 +1,4 @@
+# singleton - only one player
 class Player:
     def __init__(self, name, age):
         self.name = name
@@ -19,34 +20,40 @@ class Player:
     def restoreTime(self):
         self.timeRemaining = 1800
     
+
 class Object:
     def __init__(self, name, description):
         self.name = name
         self.description = description
-        self.isPickedUp = False
     
-    def examineObject(self):
+    def examine(self):
         pass
-    
+
+class Pickup(Object):
+    def __init__(self, name, description):
+        super().__init__(name, description)
+        self.isPickedUp = False
+        
     def pickUp(self):
         pass
     
     def putBack(self):
         pass
+        
     
-class Clue(Object):
-    def __init__(self,name,description):
+class Clue(Pickup):
+    def __init__(self, name, description):
         super().__init__(name,description)
         self.isInspected = False
     
-    def examineClue(self):
-        self.examineObject()
+    def examine(self):
+        super().examine()
         self.isInspected = True
     
     def isClue(self):
         pass
-    
-class Puzzle(Clue):
+
+class Puzzle(Object):
     def __init__(self,name,description):
         super().__init__(name,description)
         self.isSolved = False
@@ -59,7 +66,8 @@ class Puzzle(Clue):
     
     def isPuzzle(self):
         pass
-    
+
+
 class Challenge():
     def __init__(self, name, description):
         self.name = name
