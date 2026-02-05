@@ -13,10 +13,11 @@ class Player:
         pass
     
     def modTime(self, minutes):
+        self.timeRemaining += minutes * 60
         pass
     
     def restoreTime(self):
-        pass
+        self.timeRemaining = 1800
     
 class Object:
     def __init__(self, name, description):
