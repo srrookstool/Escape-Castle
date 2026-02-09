@@ -7,6 +7,11 @@ class Player:
         self.position = None
         self.timeRemaining = 1800
     
+    @property
+    def minTime(self):
+        minutes, seconds = divmod(self.timeRemaining, 60)
+        return f'{minutes}:{seconds}'
+    
     def checkInventory(self):
         pass
     
