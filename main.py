@@ -1,7 +1,7 @@
 # singleton - only one player
 class Player:
-    def __init__(self, name, age):
-        self.name = name
+    def __init__(self, name_Player, age):
+        self.name_Player = name_Player
         self.age = age
         self.inv = []
         self.position = None
@@ -27,16 +27,16 @@ class Player:
     
 
 class Object:
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+    def __init__(self, name_Object, description):
+        self.name_Object = name_Object
+        self.description_Object = description_Object
     
     def examine(self):
         pass
 
 class Pickup(Object):
-    def __init__(self, name, description):
-        super().__init__(name, description)
+    def __init__(self, name_Pick, description_Pick):
+        super().__init__(name_Pick, description_Pick)
         self.isPickedUp = False
         
     def pickUp(self):
@@ -47,8 +47,8 @@ class Pickup(Object):
         
     
 class Clue(Pickup):
-    def __init__(self, name, description):
-        super().__init__(name,description)
+    def __init__(self, name_Clue, description_Clue):
+        super().__init__(name_Clue, description_Clue)
         self.isInspected = False
     
     def examine(self):
@@ -59,8 +59,8 @@ class Clue(Pickup):
         pass
 
 class Puzzle(Object):
-    def __init__(self,name,description):
-        super().__init__(name,description)
+    def __init__(self, name_Puzzle, description_Puzzle):
+        super().__init__(name_Puzzle, description_Puzzle)
         self.isSolved = False
     
     def solvePuzzle(self):
@@ -74,9 +74,9 @@ class Puzzle(Object):
 
 
 class Challenge():
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+    def __init__(self, name_Challenge, description_Challenge):
+        self.name_Challenge = name_Challenge
+        self.description_Challenge = description_Challenge
         self.completion = 0
         self.clues = []
         self.puzzles = []
@@ -89,9 +89,9 @@ class Challenge():
         pass
     
 class Room():
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+    def __init__(self, name_Room, description_Room):
+        self.name_Room = name_Room
+        self.description_Room = description_Room
         self.objects = []
         self.challenges = []
         self.clues = []
