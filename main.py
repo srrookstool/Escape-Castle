@@ -1,8 +1,7 @@
 # singleton - only one player
 class Player:
-    def __init__(self, name_Player, age):
+    def __init__(self, name_Player):
         self.name_Player = name_Player
-        self.age = age
         self.inv = []
         self.position = None
         self.timeRemaining = 1800
