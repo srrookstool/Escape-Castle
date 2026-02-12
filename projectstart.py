@@ -128,6 +128,18 @@ class Room():
         pass
 
 
+#room definitions
+foyer = Room("Foyer", "To access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you can admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that hides a secret door that allows access to the library once you guess the right time." )
+library = Room("Library", "")
+ballroom = Room("Ballroom", "Once inside, all the torches on the walls will magically light up, creating a spooky atmosphere. The grand ballroom leads to a very large room with a grand piano in the center of the dance floor. On either side are tables and chairs covered in cellophane and covered in dust. The room is full of huge windows that allow you to see outside. ")
+dungeon = Room("Dungeon", "-The dungeons are located beneath the castle and can be accessed via a secret passage in the piano, which leads directly to the dungeon via a slide. Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to open the lock to exit. ")
+
+#challenge definitions
+
+#clue definitions
+
+#puzzle definitions
+
 # main game loop
 def gameLoop():
     printTitle()
