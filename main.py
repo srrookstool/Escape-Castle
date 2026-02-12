@@ -4,18 +4,22 @@ class Player:
         self.name_Player = name_Player
         self.inv = []
         self.position = None
-        self.timeRemaining = 1800
-    
-    @property
-    def minTime(self):
-        minutes, seconds = divmod(self.timeRemaining, 60)
-        return f'{minutes}:{seconds}'
+        self.timeRemaining = 1800   #second
     
     def checkInventory(self):
-        pass
+        print(f"Remaining Time {self.timeRemaining//60} minutes")
+        if not self.inv:
+            print("the inventory is empty")
+        else:
+            print("INVENTORY:")
+            for item in self.inv:
+                print(f"- {item.name}: {item.description}")
     
     def addItemInventory(self,item):
-        pass
+        if item not in self.inv:
+            item.pickUp()
+            self.inv.append(item)
+            print(f"{item.name} added to the inventory")
     
     def modTime(self, minutes):
         self.timeRemaining += minutes * 60
@@ -34,15 +38,19 @@ class Object:
         pass
 
 class Pickup(Object):
-    def __init__(self, name_Pick, description_Pick):
-        super().__init__(name_Pick, description_Pick)
+    def __init__(self, name_Puzzle, description_Puzzle):
+        self.name_Puzzle = name_Puzzle
+        self.description_Puzzle = description_Puzzle
         self.isPickedUp = False
         
     def pickUp(self):
-        pass
+        if not self.isPickedUp:
+            self.isPickedUp = True
+            print(f"{self.name} added to the inventory")
     
     def putBack(self):
-        pass
+        if self.isPickedUp:
+            self.isPickedUp = False
         
     
 class Clue(Pickup):
