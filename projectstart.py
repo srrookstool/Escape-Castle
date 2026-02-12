@@ -53,7 +53,9 @@ class Object:
         self.description = description
     
     def examine(self):
-        pass
+        # base object has no interactions
+        print(self.description)
+        input("Press enter to continue...")
 
 class Pickup(Object):
     def __init__(self, name, description):
@@ -63,21 +65,29 @@ class Pickup(Object):
     def pickUp(self):
         pass
     
-    def putBack(self):
-        pass
+    def examine(self):
+        print(self.description)
         
-    
+        if not self.isPickedUp:
+            # give the player the option to take the item
+            choice = input(f"Would you like to pick up the {self.name}? (y/n): ").lower()
+            if choice == 'y':
+                self.pickUp()
+            else:
+                print(f"You leave the {self.name} where it is.")
+        else:
+            # in inventory, do nothing
+            input("Press enter to continue...")        
+        
+
 class Clue(Pickup):
     def __init__(self, name, description):
-        super().__init__(name,description)
+        super().__init__(name, description)
         self.isInspected = False
     
     def examine(self):
-        super().examine()
         self.isInspected = True
-    
-    def isClue(self):
-        pass
+        super().examine()
 
 class Puzzle(Object):
     def __init__(self,name,description):
@@ -139,6 +149,10 @@ dungeon = Room("Dungeon", "-The dungeons are located beneath the castle and can 
 #clue definitions
 
 #puzzle definitions
+
+
+# populate rooms with challenges, puzzles, clues
+
 
 # main game loop
 def gameLoop():
