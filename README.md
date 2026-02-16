@@ -125,7 +125,7 @@ If the player succeeds, they escape. If not, they join the missing friends in th
 
 ---
 
-## 🗺 Room Descriptions & Challenges
+## Room Descriptions & Challenges
 
 ---
 
