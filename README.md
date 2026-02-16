@@ -37,7 +37,7 @@ If the player succeeds, they escape. If not, they join the missing friends in th
 
 ---
 
-## 🛠 Object‑Oriented Architecture
+## Object‑Oriented Architecture
 
 ### **PLAYER**
 **Attributes**
@@ -222,5 +222,3 @@ Both endings allow the player to restart or exit.
 - Narrative‑driven text interactions  
 
 ---
-
-## 🚀 How to Run
