@@ -57,9 +57,10 @@ class Player:
     
 
 class Object:
-    def __init__(self, name, description, contains=None):
+    def __init__(self, name, description, contains=None, label=None):
         self.name = name
         self.description = description
+        self.label = label if label else name
         self.contains = contains if contains else []
         self.isOpened = False
         self.isClue = False # lazy way to check object type
@@ -80,20 +81,21 @@ class Object:
         input("Press enter to continue...")
 
 class Pickup(Object):
-    def __init__(self, name, description):
-        super().__init__(name, description)
+    def __init__(self, name, description, label=None):
+        super().__init__(name, description, label=label)
         self.isPickedUp = False
         
     def pickUp(self):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
+    
     def examine(self):
         print(self.description)
         
         if not self.isPickedUp:
             # give the player the option to take the item
-            choice = input(f"Would you like to pick up the {self.name}?: ").lower()
+            choice = input(f"Would you like to pick up the {self.name}? (y/n): ").lower()
             if choice == 'y':
                 self.pickUp()
             else:
@@ -103,8 +105,8 @@ class Pickup(Object):
             input("Press enter to continue...")                
         
 class Clue(Pickup):
-    def __init__(self, name, description):
-        super().__init__(name,description)
+    def __init__(self, name, description, label=None):
+        super().__init__(name, description, label=label)
         self.isClue = True # lazy way to check object type
         self.isInspected = False
         
@@ -114,8 +116,8 @@ class Clue(Pickup):
         self.isInspected = True
 
 class Puzzle(Object):
-    def __init__(self,name,description):
-        super().__init__(name,description)
+    def __init__(self,name, description, label=None):
+        super().__init__(name, description, label=label)
         self.isSolved = False
     
     def solvePuzzle(self):
@@ -152,15 +154,33 @@ class Room():
     
     def enterRoom(self):
         print(self.description)
-        time.sleep(10)
+        print()
         print("You look around and see:")
         for option in self.objects:
-            print(f"- {option.name}: {option.description}")
+            if option.label == option.name:
+                print(f"[{option.name}]: {option.description}")
+            else:
+                print(f"[{option.label}] - {option.name}: {option.description}")
+
         
         for obj in self.objects:
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
+    
+    
+    def userInteract(self, attempt):
+        # Search for the object by name or label
+        target_obj = None
+        for obj in self.objects:
+            if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
+                target_obj = obj
+                break
+        
+        if target_obj:
+            target_obj.examine()
+            return target_obj
+
     
     def attemptExit(self):
         # returns True if all exit conditions are met, False otherwise
@@ -179,7 +199,7 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 
 # --- CREATE OBJECTS ---    
 #foyer objects
-FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?")
+FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?", label="Half Note")
 large_chest = Object( "Large Chest", 
                      "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
                      contains=[FCnote1] )
@@ -196,7 +216,7 @@ musicnote_A=Object("Music Note A", "You see a large music note barely hanging on
 
 #Ballroom objects
 musicenote_CE=Object("Music Note C and E", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.")
+FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...")
 
 #Dungeon objects
@@ -236,9 +256,43 @@ def gameLoop():
     rooms=[foyer, library, ballroom, dungeon]
     room_index = 0
     current_room = rooms[room_index]
-    current_room.enterRoom()
     
-    # REMOVE, testing attempt exit
-    print(current_room.attemptExit())
+    while True:
+        current_room.enterRoom()
+        
+        user_interact_attempt = input("\nWhat would you like to interact with? ").lower().strip()
+        
+        interacted = current_room.userInteract(user_interact_attempt)
+        
+        
+        if interacted:
+            if isinstance(interacted, Pickup) and not interacted.isPickedUp:
+                player.addItemInventory(interacted)
+        else:
+            print("Not a valid interaction.")
+            input("Press enter to continue...")
 
+        os.system('cls')
+        
+        # --- Logic between interactions --- #
+        
+        # Check if the room can be exited
+        if current_room.attemptExit():
+            # If there are more rooms, move to the next one
+            if room_index < len(rooms) - 1:
+                print(f"\nWith all clues found, you find a way out of the {current_room.name}...")
+                room_index += 1
+                current_room = rooms[room_index]
+                input("Press enter to enter the next room...")
+                os.system('cls')
+            else:
+                # Final room logic or win condition check
+                if player.checkGameState([]): # TODO: Pass challenges when if implemented
+                    break
+        
+        # Update time and check game state
+        player.modTime(-1) # Decrease time per interaction
+        if player.checkGameState([]):
+            break
+    
 gameLoop()
