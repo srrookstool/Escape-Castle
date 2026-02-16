@@ -32,7 +32,7 @@ class Player:
 class Object:
     def __init__(self, name_Object, description):
         self.name_Object = name_Object
-        self.description_Object = description_Object
+        self.description_Object = description
     
     def examine(self):
         pass
