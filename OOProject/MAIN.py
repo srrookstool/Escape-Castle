@@ -1,0 +1,225 @@
+import os
+import time
+
+def printTitle():
+   print("""
+░█▀▀░█▀▀░█▀▀░█▀█░█▀█░█▀▀░░░▀█▀░█░█░█▀▀░░░█▄█░█▀▀░█▀▄░▀█▀░█░█░█▀▀░█░█░█▀█░█░░░░░█▀▀░█▀█░█▀▀░▀█▀░█░░░█▀▀
+░█▀▀░▀▀█░█░░░█▀█░█▀▀░█▀▀░░░░█░░█▀█░█▀▀░░░█░█░█▀▀░█░█░░█░░▀▄▀░█▀▀░▀▄▀░█▀█░█░░░░░█░░░█▀█░▀▀█░░█░░█░░░█▀▀
+░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░░░░▀░░▀░▀░▀▀▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░░▀░░▀▀▀░░▀░░▀░▀░▀▀▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀
+""")
+
+# singleton - only one player
+class Player:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.inv = []
+        self.position = None
+        self.timeRemaining = 1800
+    
+    def checkInventory(self):
+        print(f"Remaining Time {self.timeRemaining//60} minutes")
+        if not self.inv:
+            print("the inventory is empty")
+        else:
+            print("INVENTORY:")
+            for item in self.inv:
+                print(f"- {item.name}: {item.description}")
+    
+    def addItemInventory(self,item):
+        if item not in self.inv:
+            item.pickUp()
+            self.inv.append(item)
+            print(f"{item.name} added to the inventory")
+    
+    
+    def modTime(self, minutes):
+        self.timeRemaining += minutes * 60
+        pass
+    
+    def restoreTime(self):
+        self.timeRemaining = 1800
+
+    def checkGameState(self, challenges):
+        # WIN CONDITION:
+        if all(ch.isCompleted for ch in challenges):
+            print("You ESCAPED!")
+            return True
+
+        # LOSE CONDITION: timer ran out
+        if self.timeRemaining <= 0:
+            print("""░▀█▀░▀█▀░█▄█░█▀▀░█▀▀░░░█░█░█▀█░█░░░█░█░█▀█░█░█░░░█░░░█▀█░█▀▀░█▀▀░█
+                     ░░█░░░█░░█░█░█▀▀░▀▀█░░░█░█░█▀▀░▀░░░░█░░█░█░█░█░░░█░░░█░█░▀▀█░█▀▀░▀
+                     ░░▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀░░░▀░░░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀""")
+            return True
+
+        # Game continues
+        return False
+    
+
+class Object:
+    def __init__(self, name, description, contains=None):
+        self.name = name
+        self.description = description
+        self.contains = contains if contains else []
+        self.isOpened = False
+    
+    def examine(self):
+        print(self.description)
+
+        # Reveal hidden items only once
+        if self.contains and not self.isOpened:
+            print("\nInside, you find:")
+            for item in self.contains:
+                print(f"- {item.name}")
+            self.isOpened = True
+
+        elif self.contains and self.isOpened:
+            print("\nYou've already opened this.")
+
+        input("Press enter to continue...")
+
+class Pickup(Object):
+    def __init__(self, name, description):
+        super().__init__(name, description)
+        self.isPickedUp = False
+        
+    def pickUp(self):
+        if not self.isPickedUp:
+            self.isPickedUp = True
+            print(f"{self.name} added to the inventory")
+    def examine(self):
+        print(self.description)
+        
+        if not self.isPickedUp:
+            # give the player the option to take the item
+            choice = input(f"Would you like to pick up the {self.name}?: ").lower()
+            if choice == 'y':
+                self.pickUp()
+            else:
+                print(f"You leave the {self.name} where it is.")
+        else:
+            # in inventory, do nothing
+            input("Press enter to continue...")                
+        
+class Clue(Pickup):
+    def __init__(self, name, description):
+        super().__init__(name,description)
+        self.isInspected = False
+    
+    def examine(self):
+        super().examine()
+        self.isInspected = True
+    
+    def isClue(self):
+        pass
+
+class Puzzle(Object):
+    def __init__(self,name,description):
+        super().__init__(name,description)
+        self.isSolved = False
+    
+    def solvePuzzle(self):
+        pass
+    
+    def failPuzzle(self):
+        pass
+    
+    def isPuzzle(self):
+        pass
+
+
+class Challenge():
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.completion = 0
+        self.clues = []
+        self.puzzles = []
+        self.isCompleted = False
+    
+    def checkProgress(self):
+        pass
+    
+    def completeChallenge(self):
+        pass
+    
+class Room():
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.objects = []
+        self.challenges = []
+        self.clues = []
+    
+    def enterRoom(self):
+        print(self.description)
+        time.sleep(10)
+        print("You look around and see:")
+        for option in self.objects:
+            print(f"- {option.name}: {option.description}")
+        for obj in self.objects:
+            if obj.contains and obj.isOpened:
+                for item in obj.contains:
+                    print(f"- {item.name}")
+    def attemptExit(self):
+        pass
+
+# --- CREATE ROOMS ---
+foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
+library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. You start to look around... ")
+ballroom = Room("Ballroom", "... as you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
+dungeon = Room("Dungeon", "… once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to open the lock to exit...")
+
+# --- CREATE OBJECTS ---    
+#foyer objects
+FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?")
+large_chest = Object( "Large Chest", 
+                     "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
+                     contains=[FCnote1] )
+musicnote_G = Object("Music Note G", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.")
+
+
+#library objects
+book1=Clue("Romeo and Juliet","You pull out a dusty copy of Romeo and Juliet, and as you open it,........")
+book2=Clue("The Great Gatsby","You pull out a worn copy of The Great Gatsby, and as you open it,........")
+book3=Clue("Sherlock Holmes: Study in Scarlett","You pull out a tattered copy of Sherlock Holmes, and as you open it,........")
+desk=Object("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of...”")
+musicnote_A=Object("Music Note A", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+
+#Ballroom objects
+musicenote_CE=Object("Music Note C and E", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.")
+piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...")
+#Dungeon objects
+
+finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door.")
+
+#Randomized objects
+VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
+handMirror=Object("Hand Mirror", "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?")#if yes get 5 minute resoration, if no, nothing happens
+
+# --- ADD OBJECTS TO ROOMS ---
+foyer.objects.append(large_chest)
+foyer.objects.append(musicnote_G)
+foyer.objects.append(clockCH)
+library.objects.append(book1)
+library.objects.append(book2)
+library.objects.append(book3)
+library.objects.append(desk)
+library.objects.append(musicnote_A)
+ballroom.objects.append(musicenote_CE)
+ballroom.objects.append(piano)
+
+
+# main game loop
+def gameLoop():
+    printTitle()
+    name = input("Enter your name: ").lower().replace(" ", "")
+    player=Player(name, 0)
+    rooms=[foyer, library, ballroom, dungeon]
+    currentRoomindex = 0
+    currentRoom = rooms[currentRoomindex]
+
+gameLoop()
