@@ -10,9 +10,8 @@ def printTitle():
 
 # singleton - only one player
 class Player:
-    def __init__(self, name, age):
+    def __init__(self, name):
         self.name = name
-        self.age = age
         self.inv = []
         self.position = None
         self.timeRemaining = 1800
@@ -63,6 +62,7 @@ class Object:
         self.description = description
         self.contains = contains if contains else []
         self.isOpened = False
+        self.isClue = False # lazy way to check object type
     
     def examine(self):
         print(self.description)
@@ -105,14 +105,13 @@ class Pickup(Object):
 class Clue(Pickup):
     def __init__(self, name, description):
         super().__init__(name,description)
+        self.isClue = True # lazy way to check object type
         self.isInspected = False
+        
     
     def examine(self):
         super().examine()
         self.isInspected = True
-    
-    def isClue(self):
-        pass
 
 class Puzzle(Object):
     def __init__(self,name,description):
@@ -127,7 +126,7 @@ class Puzzle(Object):
     
     def isPuzzle(self):
         pass
-
+    
 
 class Challenge():
     def __init__(self, name, description):
@@ -150,7 +149,6 @@ class Room():
         self.description = description
         self.objects = []
         self.challenges = []
-        self.clues = []
     
     def enterRoom(self):
         print(self.description)
@@ -158,12 +156,20 @@ class Room():
         print("You look around and see:")
         for option in self.objects:
             print(f"- {option.name}: {option.description}")
+        
         for obj in self.objects:
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
+    
     def attemptExit(self):
-        pass
+        # returns True if all exit conditions are met, False otherwise
+        
+        # cannot exit if all clues in the room haven't been inspected
+        for obj in self.objects:
+            if obj.isClue and not obj.isInspected:
+                return False
+
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -223,10 +229,16 @@ dungeon.objects.append(finaldoor)
 # main game loop
 def gameLoop():
     printTitle()
+
     name = input("Enter your name: ").lower().replace(" ", "")
-    player=Player(name, 0)
+    player = Player(name)
+
     rooms=[foyer, library, ballroom, dungeon]
-    currentRoomindex = 0
-    currentRoom = rooms[currentRoomindex]
+    room_index = 0
+    current_room = rooms[room_index]
+    current_room.enterRoom()
+    
+    # REMOVE, testing attempt exit
+    print(current_room.attemptExit())
 
 gameLoop()
