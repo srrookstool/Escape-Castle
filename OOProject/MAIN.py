@@ -258,7 +258,6 @@ VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the ce
 handMirror=Object("Hand Mirror", "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?")#if yes get 5 minute resoration, if no, nothing happens
 
 # --- ADD OBJECTS TO ROOMS ---
-foyer.objects.append(FCnote1)
 foyer.objects.append(large_chest)
 foyer.objects.append(musicnote_G)
 foyer.objects.append(clockCH)
