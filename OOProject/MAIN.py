@@ -43,20 +43,19 @@ class Player:
         # WIN CONDITION:
         if all(ch.isCompleted for ch in challenges):
             print("""░█░█░█▀█░█░█░░░█▀▀░█▀▀░█▀▀░█▀█░█▀█░█▀▀░█▀▄░█
-                ░░     █░░█░█░█░█░░░█▀▀░▀▀█░█░░░█▀█░█▀▀░█▀▀░█░█░▀
-                ░   ░  ▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀░░▀""")
+                   \r░░█░░█░█░█░█░░░█▀▀░▀▀█░█░░░█▀█░█▀▀░█▀▀░█░█░▀
+                   \r░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀░░▀""")
             return True
 
         # LOSE CONDITION: timer ran out
         if self.timeRemaining <= 0:
             print("""░▀█▀░▀█▀░█▄█░█▀▀░█▀▀░░░█░█░█▀█░█░░░█░█░█▀█░█░█░░░█░░░█▀█░█▀▀░█▀▀░█
-                     ░░█░░░█░░█░█░█▀▀░▀▀█░░░█░█░█▀▀░▀░░░░█░░█░█░█░█░░░█░░░█░█░▀▀█░█▀▀░▀
-                     ░░▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀░░░▀░░░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀""")
+                   \r░░█░░░█░░█░█░█▀▀░▀▀█░░░█░█░█▀▀░▀░░░░█░░█░█░█░█░░░█░░░█░█░▀▀█░█▀▀░▀
+                   \r░░▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀░░░▀░░░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀""")
             return True
 
         # Game continues
         return False
-    
 
 class Object:
     def __init__(self, name, description, contains=None, label=None):
@@ -294,7 +293,7 @@ def gameLoop():
         
         # Update time and check game state
         player.modTime(-1) # Decrease time per interaction
-        if player.checkGameState([]):
+        if player.checkGameState([Challenge("dummy","dummy")]):
             break
     
 gameLoop()
