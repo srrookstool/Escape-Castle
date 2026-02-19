@@ -100,7 +100,11 @@ class Pickup(Object):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
+<<<<<<< HEAD
 
+=======
+           
+>>>>>>> f55d07735dac5c880c5d7c8e66d7ba8eea0576cc
     def examine(self):
         print(self.description)
         
@@ -190,6 +194,7 @@ class Room():
     def userInteract(self, attempt):
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
+<<<<<<< HEAD
                 shouldStart = obj.examine()
 
                 # If this object starts the challenge
@@ -197,17 +202,28 @@ class Room():
                     self.challenges[0].startChallenge()
 
                 return obj
+=======
+                target_obj = obj
+                break
+        
+        if target_obj:
+            target_obj.examine()
+            return target_obj
+>>>>>>> f55d07735dac5c880c5d7c8e66d7ba8eea0576cc
 
     def attemptExit(self):
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
 
+<<<<<<< HEAD
         # If challenge exists and is not completed, block exit
         if self.challenges and not self.challenges[0].isCompleted:
             return False
 
         return True
+=======
+>>>>>>> f55d07735dac5c880c5d7c8e66d7ba8eea0576cc
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -349,4 +365,10 @@ def gameLoop():
         player.modTime(-1) # Decrease time per interaction
         if player.checkGameState([Challenge("dummy","dummy")]):
             break
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> f55d07735dac5c880c5d7c8e66d7ba8eea0576cc
 gameLoop()
+
