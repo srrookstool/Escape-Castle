@@ -10,9 +10,8 @@ def printTitle():
 
 # singleton - only one player
 class Player:
-    def __init__(self, name, age):
+    def __init__(self, name):
         self.name = name
-        self.age = age
         self.inv = []
         self.position = None
         self.timeRemaining = 1800
@@ -60,11 +59,13 @@ class Player:
     
 
 class Object:
-    def __init__(self, name, description, contains=None):
+    def __init__(self, name, description, contains=None, label=None):
         self.name = name
         self.description = description
+        self.label = label if label else name
         self.contains = contains if contains else []
         self.isOpened = False
+        self.isClue = False # lazy way to check object type
     
     def examine(self):
         print(self.description)
@@ -82,21 +83,25 @@ class Object:
         input("Press enter to continue...")
 
 class Pickup(Object):
-    def __init__(self, name, description):
-        super().__init__(name, description)
+    def __init__(self, name, description, label=None):
+        super().__init__(name, description, label=label)
         self.isPickedUp = False
         
     def pickUp(self):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def examine(self):
         print(self.description)
         
         if not self.isPickedUp:
             # give the player the option to take the item
-            choice = input(f"Would you like to pick up the {self.name}?: ").lower()
+            choice = input(f"Would you like to pick up the {self.name}? (y/n): ").lower()
             if choice == 'y':
                 self.pickUp()
             else:
@@ -110,17 +115,15 @@ class Clue(Pickup):
         super().__init__(name, description, label=label)
         self.isClue = True # lazy way to check object type
         self.isInspected = False
+        
     
     def examine(self):
         super().examine()
         self.isInspected = True
-    
-    def isClue(self):
-        pass
 
 class Puzzle(Object):
-    def __init__(self,name,description):
-        super().__init__(name,description)
+    def __init__(self,name, description, label=None):
+        super().__init__(name, description, label=label)
         self.isSolved = False
     
     def solvePuzzle(self):
@@ -131,7 +134,7 @@ class Puzzle(Object):
     
     def isPuzzle(self):
         pass
-
+    
 
 class Challenge():
     def __init__(self, name, description):
@@ -154,19 +157,28 @@ class Room():
         self.description = description
         self.objects = []
         self.challenges = []
-        self.clues = []
     
     def enterRoom(self):
         print(self.description)
-        time.sleep(10)
+        print()
         print("You look around and see:")
         for option in self.objects:
-            print(f"- {option.name}: {option.description}")
+            if option.label == option.name:
+                print(f"[{option.name}]: {option.description}")
+            else:
+                print(f"[{option.label}] - {option.name}: {option.description}")
+
+        
         for obj in self.objects:
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
+<<<<<<< HEAD
 
+=======
+    
+    
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def userInteract(self, attempt):
         # Search for the object by name or label
         target_obj = None
@@ -178,6 +190,11 @@ class Room():
         if target_obj:
             target_obj.examine()
             return target_obj
+<<<<<<< HEAD
+=======
+
+    
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def attemptExit(self):
         # returns True if all exit conditions are met, False otherwise
         
@@ -185,6 +202,10 @@ class Room():
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -194,7 +215,7 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 
 # --- CREATE OBJECTS ---    
 #foyer objects
-FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?")
+FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?", label="Half Note")
 large_chest = Object( "Large Chest", 
                      "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
                      contains=[FCnote1] )
@@ -211,7 +232,7 @@ musicnote_A=Object("Music Note A", "You see a large music note barely hanging on
 
 #Ballroom objects
 musicenote_CE=Object("Music Note C and E", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.")
+FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...")
 
 #Dungeon objects
@@ -290,4 +311,8 @@ def gameLoop():
         if player.checkGameState([]):
             break
     
+<<<<<<< HEAD
 gameLoop()
+=======
+gameLoop()
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
