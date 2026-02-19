@@ -91,11 +91,6 @@ class Pickup(Object):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def examine(self):
         print(self.description)
         
@@ -173,12 +168,7 @@ class Room():
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
-<<<<<<< HEAD
 
-=======
-    
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def userInteract(self, attempt):
         # Search for the object by name or label
         target_obj = None
@@ -190,11 +180,6 @@ class Room():
         if target_obj:
             target_obj.examine()
             return target_obj
-<<<<<<< HEAD
-=======
-
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def attemptExit(self):
         # returns True if all exit conditions are met, False otherwise
         
@@ -202,10 +187,6 @@ class Room():
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
-<<<<<<< HEAD
-=======
-
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -310,9 +291,6 @@ def gameLoop():
         player.modTime(-1) # Decrease time per interaction
         if player.checkGameState([]):
             break
-    
-<<<<<<< HEAD
 gameLoop()
-=======
-gameLoop()
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
+
+
