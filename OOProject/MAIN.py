@@ -64,8 +64,8 @@ class Object:
         self.label = label if label else name
         self.contains = contains if contains else []
         self.isOpened = False
-        self.isClue = False # lazy way to check object type
-    
+        self.isClue = False 
+        self.isPuzzle = None 
     def examine(self):
         print(self.description)
 
@@ -80,7 +80,11 @@ class Object:
             print("\nYou've already opened this.")
 
         input("Press enter to continue...")
-
+        # If this object has a puzzle, start it
+        if self.puzzle and not self.puzzle.isSolved:
+            print("\nA puzzle is attached to this object...")
+            self.puzzle.startPuzzle()
+            
 class Pickup(Object):
     def __init__(self, name, description, label=None):
         super().__init__(name, description, label=label)
@@ -90,7 +94,11 @@ class Pickup(Object):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def examine(self):
         print(self.description)
         
@@ -131,20 +139,26 @@ class Puzzle(Object):
         pass
     
 
-class Challenge():
+class Challenge:
     def __init__(self, name, description):
         self.name = name
         self.description = description
-        self.completion = 0
-        self.clues = []
-        self.puzzles = []
         self.isCompleted = False
-    
-    def checkProgress(self):
-        pass
-    
+        self.puzzle = None
+
+    def startChallenge(self):
+        print(f"\n--- {self.name} ---")
+        print(self.description)
+
+        if self.puzzle:
+            self.puzzle.startPuzzle()
+
+        if self.puzzle and self.puzzle.isSolved:
+            self.completeChallenge()
+
     def completeChallenge(self):
-        pass
+        self.isCompleted = True
+        print("\nChallenge completed!")
     
 class Room():
     def __init__(self, name, description):
@@ -168,8 +182,12 @@ class Room():
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
+<<<<<<< HEAD
+
+=======
     
     
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def userInteract(self, attempt):
         # Search for the object by name or label
         target_obj = None
@@ -181,8 +199,11 @@ class Room():
         if target_obj:
             target_obj.examine()
             return target_obj
+<<<<<<< HEAD
+=======
 
     
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def attemptExit(self):
         # returns True if all exit conditions are met, False otherwise
         
@@ -190,7 +211,10 @@ class Room():
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
+<<<<<<< HEAD
+=======
 
+>>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -246,6 +270,11 @@ dungeon.objects.append(bench)
 dungeon.objects.append(coveredTable)
 dungeon.objects.append(finaldoor)      
 
+#CREATE CHALLENGES
+foyerChallenge=Challenge("Clock Challenge", "Set the clock to the correct time....")
+libraryChallenge=Challenge("Book Challenge", "Enter the genre of the book that leads the way...  ")
+ballroomChallenge=Challenge("Ballroom Challenge", "Play the correct notes on the piano you have seen thoughout the castle...")
+dungeonChallenge=Challenge("Dungeon Challenge", "Use the clues you have found to piece together the code to exit the castle...")
 
 # main game loop
 def gameLoop():
@@ -296,4 +325,7 @@ def gameLoop():
         if player.checkGameState([Challenge("dummy","dummy")]):
             break
     
+<<<<<<< HEAD
+gameLoop()
+=======
 gameLoop()
