@@ -66,6 +66,11 @@ class Object:
         self.isOpened = False
         self.isClue = False 
         self.isPuzzle = None 
+        self.puzzle = None
+        self.triggersChallenge = False
+
+        
+
     def examine(self):
         print(self.description)
 
@@ -84,6 +89,7 @@ class Object:
         if self.puzzle and not self.puzzle.isSolved:
             print("\nA puzzle is attached to this object...")
             self.puzzle.startPuzzle()
+        return self.triggersChallenge
             
 class Pickup(Object):
     def __init__(self, name, description, label=None):
@@ -94,11 +100,7 @@ class Pickup(Object):
         if not self.isPickedUp:
             self.isPickedUp = True
             print(f"{self.name} added to the inventory")
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def examine(self):
         print(self.description)
         
@@ -140,15 +142,16 @@ class Puzzle(Object):
     
 
 class Challenge:
-    def __init__(self, name, description):
+    def __init__(self, name, startText, completionText):
         self.name = name
-        self.description = description
-        self.isCompleted = False
+        self.startText = startText
+        self.completionText = completionText
         self.puzzle = None
+        self.isCompleted = False
 
     def startChallenge(self):
-        print(f"\n--- {self.name} ---")
-        print(self.description)
+        print("\n" + self.startText)
+        input("Press ENTER to begin...")
 
         if self.puzzle:
             self.puzzle.startPuzzle()
@@ -158,7 +161,8 @@ class Challenge:
 
     def completeChallenge(self):
         self.isCompleted = True
-        print("\nChallenge completed!")
+        print("\n" + self.completionText)
+        input("Press ENTER to continue...")
     
 class Room():
     def __init__(self, name, description):
@@ -182,39 +186,28 @@ class Room():
             if obj.contains and obj.isOpened:
                 for item in obj.contains:
                     print(f"- {item.name}")
-<<<<<<< HEAD
 
-=======
-    
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
     def userInteract(self, attempt):
-        # Search for the object by name or label
-        target_obj = None
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
-                target_obj = obj
-                break
-        
-        if target_obj:
-            target_obj.examine()
-            return target_obj
-<<<<<<< HEAD
-=======
+                shouldStart = obj.examine()
 
-    
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
+                # If this object starts the challenge
+                if shouldStart and self.challenges and not self.challenges[0].isCompleted:
+                    self.challenges[0].startChallenge()
+
+                return obj
+
     def attemptExit(self):
-        # returns True if all exit conditions are met, False otherwise
-        
-        # cannot exit if all clues in the room haven't been inspected
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
-<<<<<<< HEAD
-=======
 
->>>>>>> 59fe5ef14f4779cc7ce5509af6f318e96901fba7
+        # If challenge exists and is not completed, block exit
+        if self.challenges and not self.challenges[0].isCompleted:
+            return False
+
+        return True
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -270,11 +263,43 @@ dungeon.objects.append(bench)
 dungeon.objects.append(coveredTable)
 dungeon.objects.append(finaldoor)      
 
-#CREATE CHALLENGES
-foyerChallenge=Challenge("Clock Challenge", "Set the clock to the correct time....")
-libraryChallenge=Challenge("Book Challenge", "Enter the genre of the book that leads the way...  ")
-ballroomChallenge=Challenge("Ballroom Challenge", "Play the correct notes on the piano you have seen thoughout the castle...")
-dungeonChallenge=Challenge("Dungeon Challenge", "Use the clues you have found to piece together the code to exit the castle...")
+#CREATE CHALLENGES AND CONNECTION TO PUZZLES,OBJECTS,ROOMS
+foyerChallenge = Challenge(
+    "Clock Challenge",
+    "You walk up to the clock... it is frozen at midnight. Something feels wrong.",
+    "A large oak grandfather clock opens at the top of the grand staircase — you enter."
+)
+foyerChallenge.puzzle = clockCH
+foyer.challenges.append(foyerChallenge)
+clockCH.triggersChallenge = True
+
+libraryChallenge = Challenge(
+    "Book Challenge",
+    "You study the framed picture on the desk... it must point to the correct book.",
+    "The bookcase slides aside, revealing a spiraling staircase downward..."
+)
+libraryChallenge.puzzle = desk
+library.challenges.append(libraryChallenge)
+desk.triggersChallenge = True
+
+ballroomChallenge = Challenge(
+    "Ballroom Challenge",
+    "Golden light fills the room... the piano seems to wait for you.",
+    "The piano lid opens — you slide inside and drop into the dungeon."
+)
+ballroomChallenge.puzzle = piano
+ballroom.challenges.append(ballroomChallenge)
+piano.triggersChallenge = True
+
+
+dungeonChallenge = Challenge(
+    "Dungeon Challenge",
+    "The cellar doors loom above you... only the correct code will open them.",
+    "The lock clicks open. The doors swing outward. You escape the castle."
+)
+dungeonChallenge.puzzle = finaldoor
+dungeon.challenges.append(dungeonChallenge)
+finaldoor.triggersChallenge = True
 
 # main game loop
 def gameLoop():
@@ -324,8 +349,4 @@ def gameLoop():
         player.modTime(-1) # Decrease time per interaction
         if player.checkGameState([Challenge("dummy","dummy")]):
             break
-    
-<<<<<<< HEAD
-gameLoop()
-=======
 gameLoop()
