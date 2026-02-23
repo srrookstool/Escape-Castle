@@ -146,7 +146,7 @@ class Puzzle(Object):
         self.answer = answer
         self.isSolved = False
 
-    def examine(self):
+    def examine(self, player):
         self.examined = True
         # IMPORTANT: do NOT signal challenge start here
         return False
@@ -222,22 +222,14 @@ class Room():
     def userInteract(self, player, attempt):
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
-                shouldStart = obj.examine(player)
-
-                # If this object starts the challenge
-                if shouldStart and self.challenges and not self.challenges[0].isCompleted:
-                    self.challenges[0].startChallenge()
-
-                return True # succsseful interact
-        
-        return False # no valid interact in room
-
+                target_obj = obj
+                break
 
         if not target_obj:
-            return None
+            return False # no valid interaction
 
         # Examine the object once
-        shouldStart = target_obj.examine()
+        target_obj.examine(player)
 
         # If this is a puzzle object, we treat it as the challenge trigger
         is_puzzle_trigger = isinstance(target_obj, Puzzle) and target_obj.triggersChallenge
@@ -253,7 +245,7 @@ class Room():
             if self.challenges and not self.challenges[0].isCompleted:
                 self.challenges[0].startChallenge()
 
-        return target_obj
+        return True # no valid interaction
     
 
     def allObjectsExamined(self):
