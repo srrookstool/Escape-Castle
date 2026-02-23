@@ -357,7 +357,7 @@ def gameLoop():
         
         # Update time and check game state
         player.modTime(-1) # Decrease time per interaction
-        if player.checkGameState([Challenge("dummy","dummy")]):
+        if player.checkGameState([Challenge("dummy","dummy","dummy")]):
             break
 
 gameLoop()
