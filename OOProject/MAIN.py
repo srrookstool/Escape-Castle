@@ -146,7 +146,7 @@ class Puzzle(Object):
         self.answer = answer
         self.isSolved = False
 
-    def examine(self):
+    def examine(self, player):
         self.examined = True
         # IMPORTANT: do NOT signal challenge start here
         return False
@@ -222,22 +222,14 @@ class Room():
     def userInteract(self, player, attempt):
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
-                shouldStart = obj.examine(player)
-
-                # If this object starts the challenge
-                if shouldStart and self.challenges and not self.challenges[0].isCompleted:
-                    self.challenges[0].startChallenge()
-
-                return True # succsseful interact
-        
-        return False # no valid interact in room
-
+                target_obj = obj
+                break
 
         if not target_obj:
-            return None
+            return False # no valid interaction
 
         # Examine the object once
-        shouldStart = target_obj.examine()
+        target_obj.examine(player)
 
         # If this is a puzzle object, we treat it as the challenge trigger
         is_puzzle_trigger = isinstance(target_obj, Puzzle) and target_obj.triggersChallenge
@@ -253,7 +245,7 @@ class Room():
             if self.challenges and not self.challenges[0].isCompleted:
                 self.challenges[0].startChallenge()
 
-        return target_obj
+        return True # no valid interaction
     
 
     def allObjectsExamined(self):
@@ -310,7 +302,7 @@ clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stoppe
 book1=Clue("Romeo and Juliet","You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", label="Romeo and Juliet")
 book2=Clue("The Great Gatsby","You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", label="The Great Gatsby")
 book3=Clue("Sherlock Holmes: Study in Scarlett","You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.", label="Sherlock Holmes")
-desk=Puzzle("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.”")
+desk=Puzzle("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.","Romeo and Juliet")
 musicnote_A=Object("Music Note A", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
 #Ballroom objects
 musicenote_CE=Object("Music Note C and E", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
