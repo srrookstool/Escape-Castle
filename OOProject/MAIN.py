@@ -127,12 +127,16 @@ class Clue(Pickup):
         self.isInspected = True
 
 class Puzzle(Object):
-    def __init__(self,name, description, label=None):
+    def __init__(self,name, description, answer,label=None):
         super().__init__(name, description, label=label)
+        self.answer = answer
         self.isSolved = False
     
-    def solvePuzzle(self):
-        pass
+    def startPuzzle(self):
+        answer = input("Enter your solution: ")
+        if answer == self.answer:
+            self.isSolved = True
+            
     
     def failPuzzle(self):
         pass
@@ -226,7 +230,7 @@ large_chest = Object( "Large Chest",
                      "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
                      contains=[FCnote1] )
 musicnote_G = Object("Music Note G", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.")
+clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.",)
 
 
 #library objects
