@@ -1,5 +1,16 @@
 import os
 import time
+inventory_button=False
+
+#text wrapper
+import textwrap
+def wrap(text, width=70):
+    return "\n".join(textwrap.wrap(text, width))
+
+#formatting helper
+def wrap(text, width=70):
+    import textwrap
+    return "\n".join(textwrap.wrap(text, width))
 
 def printTitle():
    print("""
@@ -17,14 +28,22 @@ class Player:
         self.timeRemaining = 1800
     
     def checkInventory(self):
-        print(f"Remaining Time {self.timeRemaining//60} minutes")
+        print("\n" + "═" * 50)
+        print(f"🩸  INVENTORY  🩸".center(50))
+        print("═" * 50)
+
+        print(f"⏳  Time Remaining: {self.timeRemaining//60} minutes\n")
+
         if not self.inv:
-            print("the inventory is empty")
+            print("Your bag feels cold and empty...")
         else:
-            print("INVENTORY:")
             for item in self.inv:
-                print(f"- {item.name}: {item.description}")
-    
+                print(f"• {item.name}")
+                print("    " + wrap(item.description, 46))
+                print()
+
+        print("═" * 50)
+        
     def addItemInventory(self, item):
         if item not in self.inv:
             self.inv.append(item)
@@ -72,15 +91,18 @@ class Object:
         
 
     def examine(self, player):
-        print(self.description)
+        print("\n" + wrap(self.description) + "\n")
         self.examined = True
 
         # Reveal hidden items only once
         if self.contains:
             self.isOpened = True
+        # Unlock inventory button when Large Chest is opened
+        if self.name.lower() == "large chest":
+            global inventory_button
+            inventory_button = True
             
-            print("\nInside, you find:\n")
-
+            print("🕸️  Inside the chest, you find:\n")
             for item in self.contains:
                 print(f"  • {item.label}")
             
@@ -119,7 +141,7 @@ class Pickup(Object):
         
         if not self.isPickedUp:
             # give the player the option to take the item
-            choice = input(f"Would you like to pick up the {self.name}? (y/n): ").lower()
+            choice = input(f"Would you like to pick up: {self.name}? (y/n): ").lower()
             if choice == 'y':
                 self.pickUp(player)
             else:
@@ -197,11 +219,11 @@ class Room():
     def enterRoom(self):
         # Room header
         print("\n" + "─" * 70)
-        print(f"🏰  {self.name.upper()}")
+        print(f"🕯️  {self.name.upper()}")
         print("─" * 70 + "\n")
 
         # Room description
-        print(self.description + "\n")
+        print(wrap(self.description))
 
         # Object list
         print("You look around and see:\n")
@@ -212,9 +234,10 @@ class Room():
         # If any containers were opened earlier, show their revealed items
         for obj in self.objects:
             if obj.contains and obj.isOpened:
-                print("\nRevealed items:")
+                print("\n  👁️  Revealed items:")
                 for item in obj.contains:
-                    print(f"  → {item.name}")
+                    print(f"    → {item.name}")
+
 
         print("\n" + "─" * 70)
 
@@ -291,22 +314,23 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 
 # --- CREATE OBJECTS ---    
 #foyer objects
-FCnote1=Clue("A small half ripped note", "The note reads: 50. Do you take it with you?", label="Half Note")
+FCnote1=Clue("A small half ripped note", "The note reads: 50.", label="Half Note")
 large_chest = Object( "Large Chest", 
-                     "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
+                     "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it to find its mainly empty except...",
                      contains=[FCnote1] )
-musicnote_G = Object("Music Note G", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.", "3:33")
+musicnote_G = Object("Broken Image", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
+clockCH=Puzzle("Clock", "You walk up to the clock... it is frozen at midnight. Something feels wrong.", "3:33")
 
 
 #library objects
-book1=Clue("Romeo and Juliet","You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", label="Romeo and Juliet")
-book2=Clue("The Great Gatsby","You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", label="The Great Gatsby")
-book3=Clue("Sherlock Holmes: Study in Scarlett","You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.", label="Sherlock Holmes")
+book1=Clue("A blood-stained, spine-split book","You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", label="Romeo and Juliet")
+book2=Clue("A worm-eaten, leather-bound relic","You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", label="The Great Gatsby")
+book3=Clue("A skin-bound, iron-nailed grimoire edition","You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.", label="Sherlock Holmes")
 desk=Puzzle("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.","Romeo and Juliet")
-musicnote_A=Object("Music Note A", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+musicnote_A=Object("Framed Music Note", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+
 #Ballroom objects
-musicenote_CE=Object("Music Note C and E", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+musicenote_CE=Object("Music Notes", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
 FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
 
@@ -338,7 +362,7 @@ dungeon.objects.append(finaldoor)
 #CREATE CHALLENGES AND CONNECTION TO PUZZLES,OBJECTS,ROOMS
 foyerChallenge = Challenge(
     "Clock Challenge",
-    "You walk up to the clock... it is frozen at midnight. Something feels wrong.",
+    "You walk up to the clock...something feels wrong, and you see that it is stopped at a chilling midnight... put the clock back at the correct time...",
     "A large oak grandfather clock opens at the top of the grand staircase — you enter."
 )
 foyerChallenge.puzzle = clockCH
@@ -381,6 +405,7 @@ finaldoor.answer = "1650" #order matters, based on the notes found in the rooms
 
 # main game loop
 def gameLoop():
+    global inventory_button
     printTitle()
 
     name = input("Enter your name: ").lower().replace(" ", "")
@@ -393,16 +418,31 @@ def gameLoop():
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         current_room.enterRoom()
+
+        # Show inventory button only after chest is opened
+        if inventory_button:
+            print(f"{'[ Press (i) for Inventory ]':>60}")
         
         user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
+
+        if user_interact_attempt == "i" and inventory_button:
+            player.checkInventory()
+            input("Press enter to continue...")
+            continue
+
         
         if user_interact_attempt == "inv" or user_interact_attempt == "inventory":
             player.checkInventory()
             input("Press enter to continue...")
         else:
-            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
-            
-            
+           valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
+
+        # Unlock inventory button when Large Chest is examined and opened
+        if isinstance(valid_room_interaction, Object):
+            if valid_room_interaction.name.lower() == "large chest":
+                if valid_room_interaction.isOpened:
+                    inventory_button = True
+                
             if not valid_room_interaction:
                 print("Not a valid interaction.")
                 input("Press enter to continue...")
