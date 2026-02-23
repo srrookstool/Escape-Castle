@@ -217,7 +217,6 @@ class Room():
 
 
         if not target_obj:
-            print("Not a valid interaction.")
             return None
 
         # Examine the object once
@@ -237,7 +236,7 @@ class Room():
             if self.challenges and not self.challenges[0].isCompleted:
                 self.challenges[0].startChallenge()
 
-        return 
+        return target_obj
     
 
     def allObjectsExamined(self):
