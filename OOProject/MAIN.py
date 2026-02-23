@@ -128,14 +128,34 @@ class Clue(Pickup):
         self.examined = True
 
 class Puzzle(Object):
+<<<<<<< HEAD
     def __init__(self, name, description, label=None):
+=======
+    def __init__(self,name, description, answer,label=None):
+>>>>>>> b2ee5d743b4f90526628c210c53d2249b66c5bbe
         super().__init__(name, description, label=label)
+        self.answer = answer
         self.isSolved = False
+<<<<<<< HEAD
 
     def examine(self):
         self.examined = True
         # IMPORTANT: do NOT signal challenge start here
         return False
+=======
+    
+    def startPuzzle(self):
+        answer = input("Enter your solution: ")
+        if answer == self.answer:
+            self.isSolved = True
+            
+    
+    def failPuzzle(self):
+        pass
+    
+    def isPuzzle(self):
+        pass
+>>>>>>> b2ee5d743b4f90526628c210c53d2249b66c5bbe
     
 
 class Challenge:
@@ -274,7 +294,7 @@ large_chest = Object( "Large Chest",
                      "You see a large chest on the ground to your right- it looks old and worn, but it might contain something useful-you open it to find its mainly empty except for half of a ripped small note- it contains two digits - piece of paper for the final code: 50.",
                      contains=[FCnote1] )
 musicnote_G = Object("Music Note G", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.")
+clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stopped at a chilling midnight... put the clock back at the correct time.",)
 
 
 #library objects
