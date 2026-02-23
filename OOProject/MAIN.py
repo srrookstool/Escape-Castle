@@ -25,9 +25,8 @@ class Player:
             for item in self.inv:
                 print(f"- {item.name}: {item.description}")
     
-    def addItemInventory(self,item):
+    def addItemInventory(self, item):
         if item not in self.inv:
-            item.pickUp()
             self.inv.append(item)
             print(f"{item.name} added to the inventory")
     
@@ -72,19 +71,32 @@ class Object:
 
         
 
-    def examine(self):
+    def examine(self, player):
         print(self.description)
         self.examined = True
 
         # Reveal hidden items only once
-        if self.contains and not self.isOpened:
+        if self.contains:
             print("\nInside, you find:")
             for item in self.contains:
-                print(f"- {item.name}")
-            self.isOpened = True
-
-        elif self.contains and self.isOpened:
-            print("\nYou've already opened this.")
+                if item.label == item.name:
+                    print(f"[{item.name}]: {item.description}")
+                else:
+                    print(f"[{item.label}] - {item.name}: {item.description}")
+            
+            # allow user to interact with contents
+            interact_attempt = input("\nWhat would you like to interact with? ").lower().strip()
+            interact_success = False
+            for item in self.contains:
+                if interact_attempt == item.name.lower() or interact_attempt == item.label.lower():
+                    interact_success = True
+                    item.examine(player)
+                    if isinstance(item, Pickup) and item.isPickedUp:
+                        self.contains.remove(item)
+                        
+            
+            if not interact_success:
+                print(f"{interact_attempt.capitalize()} is not in {self.name}")
 
         input("Press enter to continue...")
 
@@ -96,19 +108,20 @@ class Pickup(Object):
         super().__init__(name, description, label=label)
         self.isPickedUp = False
         
-    def pickUp(self):
+    def pickUp(self, player):
         if not self.isPickedUp:
             self.isPickedUp = True
+            player.addItemInventory(self)
             print(f"{self.name} added to the inventory")
 
-    def examine(self):
+    def examine(self, player):
         print(self.description)
         
         if not self.isPickedUp:
             # give the player the option to take the item
             choice = input(f"Would you like to pick up the {self.name}? (y/n): ").lower()
             if choice == 'y':
-                self.pickUp()
+                self.pickUp(player)
             else:
                 print(f"You leave the {self.name} where it is.")
         else:
@@ -122,8 +135,8 @@ class Clue(Pickup):
         self.isInspected = False
         
     
-    def examine(self):
-        super().examine()
+    def examine(self, player):
+        super().examine(player)
         self.isInspected = True
         self.examined = True
 
@@ -205,15 +218,19 @@ class Room():
 
         print("\n" + "─" * 70)
 
-    def userInteract(self, attempt):
-        target_obj = None
 
-        # Find the object the player typed
+    def userInteract(self, player, attempt):
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
+                shouldStart = obj.examine(player)
 
-                target_obj = obj
-                break
+                # If this object starts the challenge
+                if shouldStart and self.challenges and not self.challenges[0].isCompleted:
+                    self.challenges[0].startChallenge()
+
+                return True # succsseful interact
+        
+        return False # no valid interact in room
 
 
         if not target_obj:
@@ -387,15 +404,17 @@ def gameLoop():
         
         user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
         
-        interacted = current_room.userInteract(user_interact_attempt)
-        
-        if interacted:
-            if isinstance(interacted, Pickup) and not interacted.isPickedUp:
-                player.addItemInventory(interacted)
-        else:
-            print("Not a valid interaction.")
+        if user_interact_attempt == "inv" or user_interact_attempt == "inventory":
+            player.checkInventory()
             input("Press enter to continue...")
-            continue   # go back to top of loop
+        else:
+            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
+            
+            
+            if not valid_room_interaction:
+                print("Not a valid interaction.")
+                input("Press enter to continue...")
+                continue
 
         # --- Logic between interactions --- #
 
