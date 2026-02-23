@@ -77,15 +77,15 @@ class Object:
 
         # Reveal hidden items only once
         if self.contains:
-            print("\nInside, you find:")
+            self.isOpened = True
+            
+            print("\nInside, you find:\n")
+
             for item in self.contains:
-                if item.label == item.name:
-                    print(f"[{item.name}]: {item.description}")
-                else:
-                    print(f"[{item.label}] - {item.name}: {item.description}")
+                print(f"  • {item.label}")
             
             # allow user to interact with contents
-            interact_attempt = input("\nWhat would you like to interact with? ").lower().strip()
+            interact_attempt = input("\nWhat do you pick..... ").lower().strip()
             interact_success = False
             for item in self.contains:
                 if interact_attempt == item.name.lower() or interact_attempt == item.label.lower():
@@ -95,7 +95,7 @@ class Object:
                         self.contains.remove(item)
                         
             
-            if not interact_success:
+            if interact_attempt and not interact_success:
                 print(f"{interact_attempt.capitalize()} is not in {self.name}")
 
         input("Press enter to continue...")
@@ -220,6 +220,7 @@ class Room():
 
 
     def userInteract(self, player, attempt):
+        target_obj = None
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
                 target_obj = obj
