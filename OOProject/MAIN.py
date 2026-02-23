@@ -293,7 +293,7 @@ clockCH=Puzzle("Clock", "You walk up to the clock, and you see that it is stoppe
 book1=Clue("Romeo and Juliet","You pull out a dusty copy of Romeo and Juliet, and as you open it,........")
 book2=Clue("The Great Gatsby","You pull out a worn copy of The Great Gatsby, and as you open it,........")
 book3=Clue("Sherlock Holmes: Study in Scarlett","You pull out a tattered copy of Sherlock Holmes, and as you open it,........")
-desk=Object("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of...”")
+desk=Puzzle("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of...”")
 musicnote_A=Object("Music Note A", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
 
 #Ballroom objects
@@ -414,7 +414,6 @@ def gameLoop():
         player.modTime(-1) # Decrease time per interaction
         if player.checkGameState([Challenge("dummy","dummy","dummy")]):
             break
-
 
 
 gameLoop()
