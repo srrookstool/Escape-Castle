@@ -199,13 +199,6 @@ class Room():
 
                 return obj
 
-                target_obj = obj
-                break
-        
-        if target_obj:
-            target_obj.examine()
-            return target_obj
-
 
     def attemptExit(self):
         for obj in self.objects:
