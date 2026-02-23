@@ -68,11 +68,13 @@ class Object:
         self.isPuzzle = None 
         self.puzzle = None
         self.triggersChallenge = False
+        self.examined = False
 
         
 
     def examine(self):
         print(self.description)
+        self.examined = True
 
         # Reveal hidden items only once
         if self.contains and not self.isOpened:
@@ -85,12 +87,10 @@ class Object:
             print("\nYou've already opened this.")
 
         input("Press enter to continue...")
-        # If this object has a puzzle, start it
-        if self.puzzle and not self.puzzle.isSolved:
-            print("\nA puzzle is attached to this object...")
-            self.puzzle.startPuzzle()
+
+        # DO NOT start puzzles here
         return self.triggersChallenge
-            
+
 class Pickup(Object):
     def __init__(self, name, description, label=None):
         super().__init__(name, description, label=label)
@@ -125,20 +125,17 @@ class Clue(Pickup):
     def examine(self):
         super().examine()
         self.isInspected = True
+        self.examined = True
 
 class Puzzle(Object):
-    def __init__(self,name, description, label=None):
+    def __init__(self, name, description, label=None):
         super().__init__(name, description, label=label)
         self.isSolved = False
-    
-    def solvePuzzle(self):
-        pass
-    
-    def failPuzzle(self):
-        pass
-    
-    def isPuzzle(self):
-        pass
+
+    def examine(self):
+        self.examined = True
+        # IMPORTANT: do NOT signal challenge start here
+        return False
     
 
 class Challenge:
@@ -172,41 +169,92 @@ class Room():
         self.challenges = []
     
     def enterRoom(self):
-        print(self.description)
-        print()
-        print("You look around and see:")
-        for option in self.objects:
-            if option.label == option.name:
-                print(f"[{option.name}]: {option.description}")
-            else:
-                print(f"[{option.label}] - {option.name}: {option.description}")
+        # Room header
+        print("\n" + "─" * 70)
+        print(f"🏰  {self.name.upper()}")
+        print("─" * 70 + "\n")
 
-        
+        # Room description
+        print(self.description + "\n")
+
+        # Object list
+        print("You look around and see:\n")
+
+        for obj in self.objects:
+            print(f"  • {obj.label}")
+
+        # If any containers were opened earlier, show their revealed items
         for obj in self.objects:
             if obj.contains and obj.isOpened:
+                print("\nRevealed items:")
                 for item in obj.contains:
-                    print(f"- {item.name}")
+                    print(f"  → {item.name}")
+
+        print("\n" + "─" * 70)
 
     def userInteract(self, attempt):
+        target_obj = None
+
+        # Find the object the player typed
         for obj in self.objects:
             if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
 
-                shouldStart = obj.examine()
-
-                # If this object starts the challenge
-                if shouldStart and self.challenges and not self.challenges[0].isCompleted:
-                    self.challenges[0].startChallenge()
-
-                return obj
+                target_obj = obj
+                break
 
 
+        if not target_obj:
+            print("Not a valid interaction.")
+            return None
+
+        # Examine the object once
+        shouldStart = target_obj.examine()
+
+        # If this is a puzzle object, we treat it as the challenge trigger
+        is_puzzle_trigger = isinstance(target_obj, Puzzle) and target_obj.triggersChallenge
+
+        if is_puzzle_trigger:
+            # Only allow challenge if everything has been examined
+            if not self.allObjectsExamined():
+                print("\nYou feel like you haven't examined everything yet...")
+                input("Press ENTER to continue...")
+                return target_obj
+
+            # All objects examined → start challenge
+            if self.challenges and not self.challenges[0].isCompleted:
+                self.challenges[0].startChallenge()
+
+        return 
+    
+
+    def allObjectsExamined(self):
+        for obj in self.objects:
+            # Clues must be inspected
+            if obj.isClue and not obj.isInspected:
+                return False
+
+            # Puzzle objects must be examined (but not solved yet)
+            if isinstance(obj, Puzzle) and not obj.examined:
+                return False
+
+            # Normal objects must be examined
+            if not obj.isClue and not isinstance(obj, Puzzle) and not obj.examined:
+                return False
+
+        return True
     def attemptExit(self):
+        # Must inspect all clues
         for obj in self.objects:
             if obj.isClue and not obj.isInspected:
                 return False
 
 
-        # If challenge exists and is not completed, block exit
+        # Must examine all objects
+        if not self.allObjectsExamined():
+            return False
+
+        # Must complete the challenge
+
         if self.challenges and not self.challenges[0].isCompleted:
             return False
 
@@ -304,6 +352,12 @@ dungeonChallenge.puzzle = finaldoor
 dungeon.challenges.append(dungeonChallenge)
 finaldoor.triggersChallenge = True
 
+#PUZZLE ANSWERS
+clockCH.answer = ["3:33"]
+desk.answer = ["Romeo and Juliet"]
+piano.answer = ["CAGE"] #order matters
+finaldoor.answer = ["1650"] #order matters, based on the notes found in the rooms
+
 # main game loop
 def gameLoop():
     printTitle()
@@ -316,12 +370,12 @@ def gameLoop():
     current_room = rooms[room_index]
     
     while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
         current_room.enterRoom()
         
-        user_interact_attempt = input("\nWhat would you like to interact with? ").lower().strip()
+        user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
         
         interacted = current_room.userInteract(user_interact_attempt)
-        
         
         if interacted:
             if isinstance(interacted, Pickup) and not interacted.isPickedUp:
@@ -329,23 +383,19 @@ def gameLoop():
         else:
             print("Not a valid interaction.")
             input("Press enter to continue...")
+            continue   # go back to top of loop
 
-        os.system('cls' if os.name == 'nt' else 'clear')
-        
         # --- Logic between interactions --- #
-        
+
         # Check if the room can be exited
         if current_room.attemptExit():
-            # If there are more rooms, move to the next one
             if room_index < len(rooms) - 1:
                 print(f"\nWith all clues found, you find a way out of the {current_room.name}...")
                 room_index += 1
                 current_room = rooms[room_index]
                 input("Press enter to enter the next room...")
-                os.system('cls' if os.name == 'nt' else 'clear')
             else:
-                # Final room logic or win condition check
-                if player.checkGameState([]): # TODO: Pass challenges when if implemented
+                if player.checkGameState([]):
                     break
         
         # Update time and check game state
@@ -353,5 +403,6 @@ def gameLoop():
         if player.checkGameState([Challenge("dummy","dummy","dummy")]):
             break
 
-gameLoop()
 
+
+gameLoop()
