@@ -181,6 +181,7 @@ class Puzzle(Object):
         self.isSolved = False
 
     def examine(self, player):
+        super().examine(player, endInteraction=False)
         self.examined = True
         # IMPORTANT: do NOT signal challenge start here
         return False
@@ -317,6 +318,8 @@ class Room():
 
         return True
 
+# create random parts for puzzles
+door_code = f'{randint(0,9999):04}'
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -326,7 +329,7 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 
 # --- CREATE OBJECTS ---    
 #foyer objects
-FCnote1=Clue("A small half ripped note", "The note reads: 50.", label="Half Note")
+FCnote1=Clue("A small half ripped note", f"The note reads: {door_code[2:]}.", label="Half Note")
 large_chest = Object( "Large Chest", 
                      "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it to find its mainly empty except...",
                      contains=[FCnote1] )
@@ -343,7 +346,7 @@ musicnote_A=Object("Framed Music Note", "You see a large music note barely hangi
 
 #Ballroom objects
 musicenote_CE=Object("Music Notes", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", "You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: 16.", "Half Note")
+FCnote2=Object("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
 
 #Dungeon objects
