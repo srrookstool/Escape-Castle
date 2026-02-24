@@ -1,5 +1,7 @@
 import os
 import time
+from math import floor, ceil
+from random import randint, choice
 inventory_button=False
 
 #text wrapper
@@ -21,18 +23,19 @@ def printTitle():
 
 # singleton - only one player
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, startTime=1800):
         self.name = name
         self.inv = []
         self.position = None
-        self.timeRemaining = 1800
+        self.startTime = startTime
+        self.timeRemaining = startTime
     
     def checkInventory(self):
         print("\n" + "═" * 50)
         print(f"🩸  INVENTORY  🩸".center(50))
         print("═" * 50)
 
-        print(f"⏳  Time Remaining: {self.timeRemaining//60} minutes\n")
+        print(f"⏳  Time Remaining: {self.timeRemaining // 60} minutes and {self.timeRemaining % 60} seconds\n")
 
         if not self.inv:
             print("Your bag feels cold and empty...")
@@ -50,12 +53,11 @@ class Player:
             print(f"{item.name} added to the inventory")
     
     
-    def modTime(self, minutes):
-        self.timeRemaining += minutes * 60
-        pass
+    def modTime(self, seconds):
+        self.timeRemaining = floor(self.timeRemaining + seconds)
     
     def restoreTime(self):
-        self.timeRemaining = 1800
+        self.timeRemaining = self.startTime
 
     def checkGameState(self, challenges):
         # WIN CONDITION:
@@ -76,11 +78,12 @@ class Player:
         return False
 
 class Object:
-    def __init__(self, name, description, contains=None, label=None):
+    def __init__(self, name, description, contains=None, label=None, interactTime=5):
         self.name = name
         self.description = description
         self.label = label if label else name
         self.contains = contains if contains else []
+        self.interactTime = interactTime
         self.isOpened = False
         self.isClue = False 
         self.isPuzzle = None 
@@ -90,17 +93,20 @@ class Object:
 
         
 
-    def examine(self, player):
+    def examine(self, player, endInteraction=True):
         print("\n" + wrap(self.description) + "\n")
         self.examined = True
+        
+        player.modTime(-self.interactTime) # take time away for interacting (default to 5 seconds for all objects)
 
-        # Reveal hidden items only once
-        if self.contains:
-            self.isOpened = True
         # Unlock inventory button when Large Chest is opened
         if self.name.lower() == "large chest":
             global inventory_button
             inventory_button = True
+        
+        # container handling
+        if self.contains:
+            self.isOpened = True
             
             print("🕸️  Inside the chest, you find:\n")
             for item in self.contains:
@@ -120,24 +126,28 @@ class Object:
             if interact_attempt and not interact_success:
                 print(f"{interact_attempt.capitalize()} is not in {self.name}")
 
-        input("Press enter to continue...")
+        if endInteraction:
+            input("Press enter to continue...")
 
         # DO NOT start puzzles here
         return self.triggersChallenge
 
 class Pickup(Object):
-    def __init__(self, name, description, label=None):
-        super().__init__(name, description, label=label)
+    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5):
+        super().__init__(name, description, label=label, interactTime=interactTime)
+        self.pickupTime = pickupTime
+        
         self.isPickedUp = False
         
     def pickUp(self, player):
         if not self.isPickedUp:
             self.isPickedUp = True
+            player.modTime(-self.pickupTime)
             player.addItemInventory(self)
             print(f"{self.name} added to the inventory")
 
     def examine(self, player):
-        print(self.description)
+        super_return = super().examine(player, endInteraction=False) # call inherited examine and delay return
         
         if not self.isPickedUp:
             # give the player the option to take the item
@@ -148,11 +158,13 @@ class Pickup(Object):
                 print(f"You leave the {self.name} where it is.")
         else:
             # in inventory, do nothing
-            input("Press enter to continue...")                
+            input("Press enter to continue...")    
+        
+        return super_return            
         
 class Clue(Pickup):
-    def __init__(self, name, description, label=None):
-        super().__init__(name, description, label=label)
+    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5):
+        super().__init__(name, description, label=label, interactTime=interactTime, pickupTime=pickupTime)
         self.isClue = True # lazy way to check object type
         self.isInspected = False
         
@@ -416,6 +428,7 @@ def gameLoop():
     current_room = rooms[room_index]
     
     while True:
+        startTurn = time.time()
         os.system('cls' if os.name == 'nt' else 'clear')
         current_room.enterRoom()
 
@@ -425,15 +438,10 @@ def gameLoop():
         
         user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
 
-        if user_interact_attempt == "i" and inventory_button:
+        if user_interact_attempt in ["i", "inv", "inventory"] and inventory_button:
             player.checkInventory()
             input("Press enter to continue...")
             continue
-
-        
-        if user_interact_attempt == "inv" or user_interact_attempt == "inventory":
-            player.checkInventory()
-            input("Press enter to continue...")
         else:
            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
 
@@ -462,9 +470,10 @@ def gameLoop():
                     break
         
         # Update time and check game state
-        player.modTime(-1) # Decrease time per interaction
+        turnTime = time.time() - startTurn # 'decision time' on top of interaction time (only happens for valid, non-inventory interactions)
+        player.modTime(-turnTime)# Decrease time per interaction
         if player.checkGameState([Challenge("dummy","dummy","dummy")]):
-            break
+            break # end the game
 
 
 gameLoop()
