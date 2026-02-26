@@ -3,6 +3,13 @@ import time
 from math import floor, ceil
 from random import randint, choice
 inventory_button=False
+from tqdm import tqdm
+
+# COLOR
+AQUA ="#00FFFF"
+AZURE = "#069AF3"
+BLUE = "#0343DF"
+NAVY = "#01153E"
 
 #text wrapper
 import textwrap
@@ -29,6 +36,35 @@ class Player:
         self.position = None
         self.startTime = startTime
         self.timeRemaining = startTime
+        # progress bar
+        self.pbar = tqdm(total=100, 
+                         bar_format='{l_bar}{bar}| {n_fmt}%', 
+                         colour=AQUA, 
+                         leave=True)
+
+    def updateTotProgress(self, all_rooms):
+        total_game_progress = 0
+        per_room_weight = 100 / len(all_rooms) #25% each room
+
+        for room in all_rooms:
+            # Calc progress bar
+            objs_in_room = len(room.objects)
+            if objs_in_room > 0:
+                inspected = sum(1 for obj in room.objects if obj.examined)
+                if room.challenges and room.challenges[0].isCompleted:
+                    total_game_progress += per_room_weight
+                else:
+                    total_game_progress += (inspected / objs_in_room) * per_room_weight
+                    break #break if the room is not done
+
+        # color
+        if total_game_progress <= 25: self.pbar.colour = AQUA
+        elif total_game_progress <= 50: self.pbar.colour = AZURE
+        elif total_game_progress <= 75: self.pbar.colour = BLUE
+        else: self.pbar.colour = NAVY
+
+        self.pbar.n = int(total_game_progress)
+        self.pbar.refresh()
     
     def checkInventory(self):
         print("\n" + "═" * 50)
@@ -334,7 +370,7 @@ large_chest = Object( "Large Chest",
                      "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it to find its mainly empty except...",
                      contains=[FCnote1] )
 musicnote_G = Object("Broken Image", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
-clockCH=Puzzle("Clock", "You walk up to the clock... it is frozen at midnight. Something feels wrong.", "3:33")
+clockCH=Puzzle("Clock", "You walk up to the clock... it is frozen at midnight. Something feels wrong.", "3:33 am")
 
 
 #library objects
@@ -346,13 +382,13 @@ musicnote_A=Object("Framed Music Note", "You see a large music note barely hangi
 
 #Ballroom objects
 musicenote_CE=Object("Music Notes", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Clue("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
+FCnote2=Object("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
 
 #Dungeon objects
 bench=Object("Bench", "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
 coveredTable=Clue("Covered Table", "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
-finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :", door_code)
+finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :","1650")
 
 #Randomized objects
 VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
@@ -413,11 +449,11 @@ dungeon.challenges.append(dungeonChallenge)
 finaldoor.triggersChallenge = True
 
 #PUZZLE ANSWERS
-clockCH.answer = "3:33"
+clockCH.answer = "3:33 am"
 desk.answer = "Romeo and Juliet"
 piano.answer = "CAGE" #order matters
-finaldoor.answer = door_code #order matters, based on the notes found in the rooms
-
+finaldoor.answer = "1650" #order matters, based on the notes found in the rooms
+ 
 # main game loop
 def gameLoop():
     global inventory_button
@@ -445,6 +481,10 @@ def gameLoop():
     while True:
         startTurn = time.time()
         os.system('cls' if os.name == 'nt' else 'clear')
+        
+        # show progress bar
+        player.updateTotProgress(rooms)
+
         current_room.enterRoom()
 
         # Show inventory button only after chest is opened
@@ -461,12 +501,7 @@ def gameLoop():
            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
 
         # Unlock inventory button when Large Chest is examined and opened
-        if isinstance(valid_room_interaction, Object):
-            if valid_room_interaction.name.lower() == "large chest":
-                if valid_room_interaction.isOpened:
-                    inventory_button = True
-                
-            if not valid_room_interaction:
+        if not valid_room_interaction:
                 print("Not a valid interaction.")
                 input("Press enter to continue...")
                 continue
@@ -482,12 +517,15 @@ def gameLoop():
                 input("Press enter to enter the next room...")
             else:
                 if player.checkGameState([]):
+                    player.pbar.close()
                     break
+            
         
         # Update time and check game state
         turnTime = time.time() - startTurn # 'decision time' on top of interaction time (only happens for valid, non-inventory interactions)
         player.modTime(-turnTime)# Decrease time per interaction
         if player.checkGameState([Challenge("dummy","dummy","dummy")]):
+            player.pbar.close()
             break # end the game
 
 
