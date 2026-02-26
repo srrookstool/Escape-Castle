@@ -114,12 +114,13 @@ class Player:
         return False
 
 class Object:
-    def __init__(self, name, description, contains=None, label=None, interactTime=5):
+    def __init__(self, name, description, contains=None, label=None, interactTime=5, letter=None):
         self.name = name
         self.description = description
         self.label = label if label else name
         self.contains = contains if contains else []
         self.interactTime = interactTime
+        self.letter = letter
         self.isOpened = False
         self.isClue = False 
         self.isPuzzle = None 
@@ -169,8 +170,8 @@ class Object:
         return self.triggersChallenge
 
 class Pickup(Object):
-    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5):
-        super().__init__(name, description, label=label, interactTime=interactTime)
+    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5, letter=None):
+        super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
         self.pickupTime = pickupTime
         
         self.isPickedUp = False
@@ -199,8 +200,8 @@ class Pickup(Object):
         return super_return            
         
 class Clue(Pickup):
-    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5):
-        super().__init__(name, description, label=label, interactTime=interactTime, pickupTime=pickupTime)
+    def __init__(self, name, description, label=None, interactTime=5, pickupTime=5, letter=None):
+        super().__init__(name, description, label=label, interactTime=interactTime, pickupTime=pickupTime, letter=letter)
         self.isClue = True # lazy way to check object type
         self.isInspected = False
         
@@ -211,22 +212,26 @@ class Clue(Pickup):
         self.examined = True
 
 class Puzzle(Object):
-    def __init__(self,name, description, answer,label=None):
-        super().__init__(name, description, label=label)
+    def __init__(self,name, description, answer,label=None, interactTime=5, letter=None):
+        super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
         self.answer = answer
         self.isSolved = False
 
     def examine(self, player):
-        super().examine(player, endInteraction=False)
+        if not self.examined:
+            super().examine(player, endInteraction=False)
+
         self.examined = True
-        # IMPORTANT: do NOT signal challenge start here
         return False
     
     def startPuzzle(self):
         answer = input("Enter your solution: ")
         if answer == self.answer:
             self.isSolved = True
-            
+        else:
+            print("\nYou entered that wrong.")
+        input("Press ENTER to continue...")
+
     
     def failPuzzle(self):
         pass
@@ -236,10 +241,11 @@ class Puzzle(Object):
     
 
 class Challenge:
-    def __init__(self, name, startText, completionText):
+    def __init__(self, name, startText, completionText, letter=None):
         self.name = name
         self.startText = startText
         self.completionText = completionText
+        self.letter = letter
         self.puzzle = None
         self.isCompleted = False
 
@@ -256,7 +262,6 @@ class Challenge:
     def completeChallenge(self):
         self.isCompleted = True
         print("\n" + self.completionText)
-        input("Press ENTER to continue...")
     
 class Room():
     def __init__(self, name, description):
@@ -278,7 +283,7 @@ class Room():
         print("You look around and see:\n")
 
         for obj in self.objects:
-            print(f"  • {obj.label}")
+            print(wrap(f"  • {obj.label}"))
 
         # If any containers were opened earlier, show their revealed items
         for obj in self.objects:
@@ -294,7 +299,11 @@ class Room():
     def userInteract(self, player, attempt):
         target_obj = None
         for obj in self.objects:
-            if attempt.lower() == obj.name.lower() or attempt.lower() == obj.label.lower():
+            if (
+                attempt.lower() == obj.name.lower()
+                or attempt.lower() == obj.label.lower()
+                or (obj.letter and attempt.lower() == obj.letter.lower())
+            ):
                 target_obj = obj
                 break
 
@@ -318,7 +327,7 @@ class Room():
             if self.challenges and not self.challenges[0].isCompleted:
                 self.challenges[0].startChallenge()
 
-        return True # no valid interaction
+        return target_obj # no valid interaction
     
 
     def allObjectsExamined(self):
@@ -367,32 +376,58 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 #foyer objects
 FCnote1=Clue("A small half ripped note", f"The note reads: {door_code[2:]}.", label="Half Note")
 large_chest = Object( "Large Chest", 
-                     "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it to find its mainly empty except...",
+                     "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it...",
                      contains=[FCnote1] )
-musicnote_G = Object("Broken Image", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
-clockCH=Puzzle("Clock", "You walk up to the clock... it is frozen at midnight. Something feels wrong.", "3:33 am")
+musicnote_G = Object("Broken Frame", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
+clockCH=Puzzle("Clock", 
+               "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
+               "3:33 am")
 
 
 #library objects
-book1=Clue("A blood-stained, spine-split book","You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", label="Romeo and Juliet")
-book2=Clue("A worm-eaten, leather-bound relic","You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", label="The Great Gatsby")
-book3=Clue("A skin-bound, iron-nailed grimoire edition","You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.", label="Sherlock Holmes")
-desk=Puzzle("Desk", "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.","Romeo and Juliet")
-musicnote_A=Object("Framed Music Note", "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+book1=Clue("A blood-stained, spine-split book (B)",
+           "You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", 
+           label="A blood-stained, spine-split book (B)",
+           letter="B")
+book2=Clue("A worm-eaten, leather-bound relic (R)",
+           "You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", 
+           label="A worm-eaten, leather-bound relic (R)",
+           letter="R")
+book3=Clue("A skin-bound, iron-nailed grimoire edition (E)",
+           "You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.",
+             label="A skin-bound, iron-nailed grimoire edition (E)",
+             letter="E")
+desk=Puzzle("A Clutery Desk (D)",
+             "You study the framed picture on the desk... it must point to the correct book.",
+            "Romeo and Juliet",
+            letter="D")
+musicnote_A=Object("Inscripted Frame (F)", 
+                   "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                   letter="F")
 
 #Ballroom objects
-musicenote_CE=Object("Music Notes", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
-piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
+musicenote_CE=Object("Framed Music Notes", 
+                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+FCnote2=Object("A small ripped note", 
+               f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
+               label= "A small ripped note")
+piano=Puzzle("Grand Piano", 
+             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
 
 #Dungeon objects
-bench=Object("Bench", "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
-coveredTable=Clue("Covered Table", "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
-finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :","1650")
+bench=Object("Bench", 
+             "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
+coveredTable=Clue("Covered Table", 
+                  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
+finaldoor=Puzzle("Cellar Doors", 
+                 "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
+                 "1650")
 
 #Randomized objects
-VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
-handMirror=Object("Hand Mirror", "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?")#if yes get 5 minute resoration, if no, nothing happens
+VintageThrone=Object("Vintage Throne", 
+                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
+handMirror=Object("Hand Mirror",
+                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?")#if yes get 5 minute resoration, if no, nothing happens
 
 # --- ADD OBJECTS TO ROOMS ---
 foyer.objects.append(large_chest)
@@ -422,7 +457,7 @@ clockCH.triggersChallenge = True
 
 libraryChallenge = Challenge(
     "Book Challenge",
-    "You study the framed picture on the desk... it must point to the correct book.",
+    "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.",
     "The bookcase slides aside, revealing a spiraling staircase downward..."
 )
 libraryChallenge.puzzle = desk
