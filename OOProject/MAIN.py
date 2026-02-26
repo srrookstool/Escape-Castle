@@ -352,7 +352,7 @@ piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom
 #Dungeon objects
 bench=Object("Bench", "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
 coveredTable=Clue("Covered Table", "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
-finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :", str(door_code))
+finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :", door_code)
 
 #Randomized objects
 VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
@@ -416,7 +416,7 @@ finaldoor.triggersChallenge = True
 clockCH.answer = "3:33"
 desk.answer = "Romeo and Juliet"
 piano.answer = "CAGE" #order matters
-finaldoor.answer = "1650" #order matters, based on the notes found in the rooms
+finaldoor.answer = door_code #order matters, based on the notes found in the rooms
 
 # main game loop
 def gameLoop():
