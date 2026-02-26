@@ -346,13 +346,13 @@ musicnote_A=Object("Framed Music Note", "You see a large music note barely hangi
 
 #Ballroom objects
 musicenote_CE=Object("Music Notes", "You see a large music note barely hanging on the wall, it is the note CE, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
+FCnote2=Clue("A small ripped note", f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", "Half Note")
 piano=Puzzle("Grand Piano", "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
 
 #Dungeon objects
 bench=Object("Bench", "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
 coveredTable=Clue("Covered Table", "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
-finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :", "1650")
+finaldoor=Puzzle("Final Door", "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :", str(door_code))
 
 #Randomized objects
 VintageThrone=Object("Vintage Throne", "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
@@ -426,9 +426,21 @@ def gameLoop():
     name = input("Enter your name: ").lower().replace(" ", "")
     player = Player(name)
 
+
     rooms=[foyer, library, ballroom, dungeon]
     room_index = 0
     current_room = rooms[room_index]
+    
+    #DEBUG FUNCTIONS, COMMENT OUT WHEN NOT TESTING
+    if name == "library":
+        room_index = 1
+        current_room = library
+    elif name == "ballroom":
+        room_index = 2
+        current_room = ballroom
+    elif name == "dungeon":
+        room_index = 3
+        current_room = dungeon
     
     while True:
         startTurn = time.time()
