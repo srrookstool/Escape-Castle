@@ -1,8 +1,8 @@
 import os
 import time
 from math import floor, ceil
-from random import randint, choice
-inventory_button=False
+import random
+inventory_button = False
 from tqdm import tqdm
 
 # COLOR
@@ -181,7 +181,6 @@ class Pickup(Object):
             self.isPickedUp = True
             player.modTime(-self.pickupTime)
             player.addItemInventory(self)
-            print(f"{self.name} added to the inventory")
 
     def examine(self, player):
         super_return = super().examine(player, endInteraction=False) # call inherited examine and delay return
@@ -392,17 +391,17 @@ class Room():
         return True
 
 # create random parts for puzzles
-book_answer, book_challenge_text_clue = choice([
+book_answer, book_challenge_text_clue = random.choice([
     ("Romeo and Juliet", "rose"),
     ("The Great Gatsby", "clock"),
     ("Sherlock Holmes", "dagger")
 ])
 book_challenge_text = f"You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a {book_challenge_text_clue}."
 
-door_code = f'{randint(0,9999):04}'
+door_code = f'{random.randint(0,9999):04}'
 
 
-throne_func, throne_continue_text_yes = choice([
+throne_func, throne_continue_text_yes = random.choice([
     (lambda player: player.restoreTime(), "throne restore time todo"), # restore all time (implement actual text)
     (lambda player: player.modTime(-300), "throne lose time todo") # lose 5 minutes (implement actual text)
 ])
@@ -410,6 +409,9 @@ throne_continue_texts = [throne_continue_text_yes, "throne do nothing todo"]
 
 mirror_func = lambda player: player.modTime(300) # no randomness but this was best place to put it
 mirror_continue_texts = ["mirror gain time todo", "mirror do nothing todo"]
+
+should_throne = random.random() < 0.2 # 20% chance
+should_mirror = random.random() < 0.3 # 30% chance
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -472,7 +474,7 @@ finaldoor=Puzzle("Cellar Doors",
 vintageThrone=SpecialInteract("Vintage Throne", 
                      "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?",
                      throne_func, throne_continue_texts)#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
-handMirror=Object("Hand Mirror",
+handMirror=SpecialInteract("Hand Mirror",
                    "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?",
                      mirror_func, mirror_continue_texts) #if yes get 5 minute resoration, if no, nothing happen
 
@@ -582,7 +584,6 @@ def gameLoop():
         if user_interact_attempt in ["i", "inv", "inventory"] and inventory_button:
             player.checkInventory()
             input("Press enter to continue...")
-            continue
         else:
            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
 
@@ -590,7 +591,6 @@ def gameLoop():
         if not valid_room_interaction:
                 print("Not a valid interaction.")
                 input("Press enter to continue...")
-                continue
 
         # --- Logic between interactions --- #
 
