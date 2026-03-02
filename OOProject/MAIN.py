@@ -453,7 +453,7 @@ musicnote_A=Object("Inscripted Frame (F)",
 #Ballroom objects
 musicenote_CE=Object("Framed Music Notes", 
                      "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Object("A small ripped note", 
+FCnote2=Clue("A small ripped note", 
                f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
                label= "A small ripped note")
 piano=Puzzle("Grand Piano", 
