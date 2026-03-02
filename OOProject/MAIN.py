@@ -219,7 +219,7 @@ class Puzzle(Object):
 
     def examine(self, player):
         if not self.examined:
-            super().examine(player, endInteraction=False)
+            print("\n" + wrap(self.description) + "\n")
 
         self.examined = True
         return False
@@ -231,7 +231,7 @@ class Puzzle(Object):
         elif self.alternative_answers and answer in self.alternative_answers:
             self.isSolved = True
         else:
-            print("\nYou entered that wrong.")
+            print("\nYou entered that wrong...time has been deducted as a penalty.")
         input("Press ENTER to continue...")
 
     
@@ -577,7 +577,7 @@ def gameLoop():
 
         # Show inventory button only after chest is opened
         if inventory_button:
-            print(f"{'[ Press (i) for Inventory ]':>60}")
+            print(f"{'[ Press (i) for Inventory ]':>70}")
         
         user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
 
