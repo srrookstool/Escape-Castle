@@ -516,7 +516,7 @@ desk.triggersChallenge = True
 
 ballroomChallenge = Challenge(
     "Ballroom Challenge",
-    "Golden light fills the room... the piano seems to wait for you.",
+    "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...",
     "The piano lid opens — you slide inside and drop into the dungeon."
 )
 ballroomChallenge.puzzle = piano
