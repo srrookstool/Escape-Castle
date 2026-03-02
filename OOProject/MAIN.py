@@ -212,9 +212,10 @@ class Clue(Pickup):
         self.examined = True
 
 class Puzzle(Object):
-    def __init__(self,name, description, answer,label=None, interactTime=5, letter=None):
+    def __init__(self,name, description, answer, label=None, interactTime=5, letter=None, alternative_answers=[]):
         super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
         self.answer = answer
+        self.alternative_answers = alternative_answers
         self.isSolved = False
 
     def examine(self, player):
@@ -228,6 +229,8 @@ class Puzzle(Object):
         answer = input("Enter your solution: ")
         if answer == self.answer:
             self.isSolved = True
+        elif self.alternative_answers and answer in self.alternative_answers:
+            self.isSolved = True
         else:
             print("\nYou entered that wrong.")
         input("Press ENTER to continue...")
@@ -239,6 +242,27 @@ class Puzzle(Object):
     def isPuzzle(self):
         pass
     
+
+class SpecialInteract(Object):
+    def __init__(self, name, description, special_call, continue_texts, interactTime=5, letter=None):
+        super().__init__(name, description, interactTime=interactTime, letter=letter)
+        self.special_call = special_call # function called for yes      
+        self.continue_texts = continue_texts # texts for yes and no
+    
+    def examine(self, player):
+        super().examine(player, endInteraction=False)
+        
+        # prompt user for yes or no
+        choice = input().lower()
+        if choice in ["y", "yes"]:
+            self.special_call(player)
+            print(self.continue_texts[0])
+        else:
+            print(self.coninue_texts[1])
+            
+        input("Press enter to continue...")
+            
+        
 
 class Challenge:
     def __init__(self, name, startText, completionText, letter=None):
@@ -312,6 +336,10 @@ class Room():
 
         # Examine the object once
         target_obj.examine(player)
+        
+        # if object is specialInteract remove it from room after interaction
+        if isinstance(target_obj, SpecialInteract):
+            self.objects.remove(target_obj)
 
         # If this is a puzzle object, we treat it as the challenge trigger
         is_puzzle_trigger = isinstance(target_obj, Puzzle) and target_obj.triggersChallenge
@@ -364,7 +392,24 @@ class Room():
         return True
 
 # create random parts for puzzles
+book_answer, book_challenge_text_clue = choice([
+    ("Romeo and Juliet", "rose"),
+    ("The Great Gatsby", "clock"),
+    ("Sherlock Holmes", "dagger")
+])
+book_challenge_text = f"You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a {book_challenge_text_clue}."
+
 door_code = f'{randint(0,9999):04}'
+
+
+throne_func, throne_continue_text_yes = choice([
+    (lambda player: player.restoreTime(), "throne restore time todo"), # restore all time (implement actual text)
+    (lambda player: player.modTime(-300), "throne lose time todo") # lose 5 minutes (implement actual text)
+])
+throne_continue_texts = [throne_continue_text_yes, "throne do nothing todo"]
+
+mirror_func = lambda player: player.modTime(300) # no randomness but this was best place to put it
+mirror_continue_texts = ["mirror gain time todo", "mirror do nothing todo"]
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
@@ -381,7 +426,7 @@ large_chest = Object( "Large Chest",
 musicnote_G = Object("Broken Frame", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
 clockCH=Puzzle("Clock", 
                "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
-               "3:33 am")
+               "3:33")
 
 
 #library objects
@@ -399,7 +444,7 @@ book3=Clue("A skin-bound, iron-nailed grimoire edition (E)",
              letter="E")
 desk=Puzzle("A Clutery Desk (D)",
              "You study the framed picture on the desk... it must point to the correct book.",
-            "Romeo and Juliet",
+            book_answer,
             letter="D")
 musicnote_A=Object("Inscripted Frame (F)", 
                    "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
@@ -421,13 +466,18 @@ coveredTable=Clue("Covered Table",
                   "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
 finaldoor=Puzzle("Cellar Doors", 
                  "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
-                 "1650")
+                 door_code)
 
-#Randomized objects
-VintageThrone=Object("Vintage Throne", 
-                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
+#Randomized objects (not yet implemented)
+vintageThrone=SpecialInteract("Vintage Throne", 
+                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?",
+                     throne_func, throne_continue_texts)#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
 handMirror=Object("Hand Mirror",
-                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?")#if yes get 5 minute resoration, if no, nothing happens
+                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?",
+                     mirror_func, mirror_continue_texts) #if yes get 5 minute resoration, if no, nothing happen
+
+vintageThrone.examined = True # act as if these have already been examined
+handMirror.examined = True # so the player can continue without ever interacting with them
 
 # --- ADD OBJECTS TO ROOMS ---
 foyer.objects.append(large_chest)
@@ -457,7 +507,7 @@ clockCH.triggersChallenge = True
 
 libraryChallenge = Challenge(
     "Book Challenge",
-    "You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a rose.",
+    book_challenge_text, # look above at random generated parts
     "The bookcase slides aside, revealing a spiraling staircase downward..."
 )
 libraryChallenge.puzzle = desk
@@ -484,10 +534,11 @@ dungeon.challenges.append(dungeonChallenge)
 finaldoor.triggersChallenge = True
 
 #PUZZLE ANSWERS
-clockCH.answer = "3:33 am"
-desk.answer = "Romeo and Juliet"
+clockCH.answer = "3:33"
+clockCH.alternative_answers = ["3:33 am", "3:33 AM", "03:33"] # support for ways to format time (AM/PM and standard 24 hr)
+desk.answer = book_answer # one of the books chosen at random, challenge text set to match
 piano.answer = "CAGE" #order matters
-finaldoor.answer = "1650" #order matters, based on the notes found in the rooms
+finaldoor.answer = door_code #order matters, based on the notes found in the rooms
  
 # main game loop
 def gameLoop():
