@@ -432,15 +432,15 @@ clockCH=Puzzle("Clock",
 
 
 #library objects
-book1=Clue("A blood-stained, spine-split book (B)",
+book1=Clue("Romeo and Juliet",
            "You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", 
            label="A blood-stained, spine-split book (B)",
            letter="B")
-book2=Clue("A worm-eaten, leather-bound relic (R)",
+book2=Clue("The Great Gatsby",
            "You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", 
            label="A worm-eaten, leather-bound relic (R)",
            letter="R")
-book3=Clue("A skin-bound, iron-nailed grimoire edition (E)",
+book3=Clue("Sherlock Holmes",
            "You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.",
              label="A skin-bound, iron-nailed grimoire edition (E)",
              letter="E")
@@ -500,7 +500,7 @@ dungeon.objects.append(finaldoor)
 #CREATE CHALLENGES AND CONNECTION TO PUZZLES,OBJECTS,ROOMS
 foyerChallenge = Challenge(
     "Clock Challenge",
-    "You walk up to the clock...something feels wrong, and you see that it is stopped at a chilling midnight... put the clock back at the correct time...",
+    "... put the clock back at the correct time...",
     "A large oak grandfather clock opens at the top of the grand staircase — you enter."
 )
 foyerChallenge.puzzle = clockCH
