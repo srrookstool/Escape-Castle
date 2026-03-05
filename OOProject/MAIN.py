@@ -227,17 +227,22 @@ class Puzzle(Object):
         return False
     
     def startPuzzle(self, player):
-        answer = input("Enter your solution: ").lower().strip()
-        if answer == self.answer.lower():
-            self.isSolved = True
-        else:
+        while not self.isSolved:
+            answer = input("Enter your solution: ").lower().strip()
+
+            if answer == self.answer.lower():
+                print("\nCorrect!")
+                self.isSolved = True
+                break
+
             if answer:
                 player.modTime(-self.wrongTimeLoss)
-                print("\nYou entered that wrong...time has been deducted as a penalty.")
+                print("\nYou entered that wrong... time has been deducted.")
             else:
                 player.modTime(-self.naTimeLoss)
-                print("to\nidk some kind of message about how you should be more prepared or smthn [GREAT TODO MESSAGE]")
-        input("Press ENTER to continue...")
+                print("\nYou hesitated... time has been deducted.")
+
+            input("Press ENTER to try again...")
 
     
     def failPuzzle(self):
@@ -290,6 +295,7 @@ class Challenge:
     def completeChallenge(self):
         self.isCompleted = True
         print("\n" + self.completionText)
+    
     
 class Room():
     def __init__(self, name, description):
