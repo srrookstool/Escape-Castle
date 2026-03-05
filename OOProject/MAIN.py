@@ -71,8 +71,6 @@ class Player:
         print(f"🩸  INVENTORY  🩸".center(50))
         print("═" * 50)
 
-        print(f"⏳  Time Remaining: {self.timeRemaining // 60} minutes and {self.timeRemaining % 60} seconds\n")
-
         if not self.inv:
             print("Your bag feels cold and empty...")
         else:
@@ -579,7 +577,8 @@ def gameLoop():
         
         # show progress bar
         player.updateTotProgress(rooms)
-
+        print("\n")
+        print(f"⏳  Time Remaining: {player.timeRemaining // 60} minutes and {player.timeRemaining % 60} seconds\n")
         current_room.enterRoom()
 
         # Show inventory button only after chest is opened
@@ -610,7 +609,7 @@ def gameLoop():
                 input("Press enter to enter the next room...")
             
         
-        # Update time and check game state
+       # Update time and check game state
         turnTime = time.time() - startTurn # 'decision time' on top of interaction time
         player.modTime(-turnTime)# Decrease time per interaction
         if player.checkGameState(allChallenges):
