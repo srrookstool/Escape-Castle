@@ -211,11 +211,13 @@ class Clue(Pickup):
         self.examined = True
 
 class Puzzle(Object):
-    def __init__(self,name, description, answer, label=None, interactTime=5, letter=None, alternative_answers=[]):
+    def __init__(self,name, description, answer, label=None, interactTime=5, letter=None):
         super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
         self.answer = answer
-        self.alternative_answers = alternative_answers
         self.isSolved = False
+        self.wrongTimeLoss = 60
+        self.naTimeLoss = 30
+
 
     def examine(self, player):
         if not self.examined:
@@ -224,14 +226,17 @@ class Puzzle(Object):
         self.examined = True
         return False
     
-    def startPuzzle(self):
-        answer = input("Enter your solution: ")
-        if answer == self.answer:
-            self.isSolved = True
-        elif self.alternative_answers and answer in self.alternative_answers:
+    def startPuzzle(self, player):
+        answer = input("Enter your solution: ").lower().strip()
+        if answer == self.answer.lower():
             self.isSolved = True
         else:
-            print("\nYou entered that wrong...time has been deducted as a penalty.")
+            if answer:
+                player.modTime(-self.wrongTimeLoss)
+                print("\nYou entered that wrong...time has been deducted as a penalty.")
+            else:
+                player.modTime(-self.naTimeLoss)
+                print("to\nidk some kind of message about how you should be more prepared or smthn [GREAT TODO MESSAGE]")
         input("Press ENTER to continue...")
 
     
@@ -272,12 +277,12 @@ class Challenge:
         self.puzzle = None
         self.isCompleted = False
 
-    def startChallenge(self):
+    def startChallenge(self, player):
         print("\n" + self.startText)
         input("Press ENTER to begin...")
 
         if self.puzzle:
-            self.puzzle.startPuzzle()
+            self.puzzle.startPuzzle(player)
 
         if self.puzzle and self.puzzle.isSolved:
             self.completeChallenge()
@@ -352,7 +357,7 @@ class Room():
 
             # All objects examined → start challenge
             if self.challenges and not self.challenges[0].isCompleted:
-                self.challenges[0].startChallenge()
+                self.challenges[0].startChallenge(player)
 
         return target_obj # no valid interaction
     
@@ -428,7 +433,7 @@ large_chest = Object( "Large Chest",
 musicnote_G = Object("Broken Frame", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
 clockCH=Puzzle("Clock", 
                "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
-               "3:33")
+               "3:33 am")
 
 
 #library objects
@@ -535,9 +540,11 @@ dungeonChallenge.puzzle = finaldoor
 dungeon.challenges.append(dungeonChallenge)
 finaldoor.triggersChallenge = True
 
+
+allChallenges = [foyerChallenge, libraryChallenge, ballroomChallenge, dungeonChallenge]
+
 #PUZZLE ANSWERS
-clockCH.answer = "3:33"
-clockCH.alternative_answers = ["3:33 am", "3:33 AM", "03:33"] # support for ways to format time (AM/PM and standard 24 hr)
+clockCH.answer = "3:33 am"
 desk.answer = book_answer # one of the books chosen at random, challenge text set to match
 piano.answer = "CAGE" #order matters
 finaldoor.answer = door_code #order matters, based on the notes found in the rooms
@@ -601,16 +608,12 @@ def gameLoop():
                 room_index += 1
                 current_room = rooms[room_index]
                 input("Press enter to enter the next room...")
-            else:
-                if player.checkGameState([]):
-                    player.pbar.close()
-                    break
             
         
         # Update time and check game state
-        turnTime = time.time() - startTurn # 'decision time' on top of interaction time (only happens for valid, non-inventory interactions)
+        turnTime = time.time() - startTurn # 'decision time' on top of interaction time
         player.modTime(-turnTime)# Decrease time per interaction
-        if player.checkGameState([Challenge("dummy","dummy","dummy")]):
+        if player.checkGameState(allChallenges):
             player.pbar.close()
             break # end the game
 
