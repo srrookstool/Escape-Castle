@@ -135,7 +135,7 @@ class Object:
         player.modTime(-self.interactTime) # take time away for interacting (default to 5 seconds for all objects)
 
         # Unlock inventory button when Large Chest is opened
-        if self.name.lower() == "large chest":
+        if self.letter and self.letter.lower() == "l":
             global inventory_button
             inventory_button = True
         
@@ -151,7 +151,11 @@ class Object:
             interact_attempt = input("\nWhat do you pick..... ").lower().strip()
             interact_success = False
             for item in self.contains:
-                if interact_attempt == item.name.lower() or interact_attempt == item.label.lower():
+                if (
+                    interact_attempt == item.name.lower()
+                    or interact_attempt == item.label.lower()
+                    or (item.letter and interact_attempt == item.letter.lower())
+                ):
                     interact_success = True
                     item.examine(player)
                     if isinstance(item, Pickup) and item.isPickedUp:
@@ -198,9 +202,12 @@ class Pickup(Object):
         
 class Clue(Pickup):
     def __init__(self, name, description, label=None, interactTime=5, pickupTime=5, letter=None):
+        if label is None and letter is not None:
+            label = letter
         super().__init__(name, description, label=label, interactTime=interactTime, pickupTime=pickupTime, letter=letter)
-        self.isClue = True # lazy way to check object type
+        self.isClue = True
         self.isInspected = False
+        self.examined = True
         
     
     def examine(self, player):
@@ -430,14 +437,20 @@ dungeon = Room("Dungeon", "… once inside, visibility is very low, with light c
 
 # --- CREATE OBJECTS ---    
 #foyer objects
-FCnote1=Clue("A small half ripped note", f"The note reads: {door_code[2:]}.", label="Half Note")
-large_chest = Object( "Large Chest", 
+FCnote1=Clue("Half Note", f"The note reads: {door_code[2:]}.", 
+             label="A small ripped note (N)",
+             letter="N")
+large_chest = Object( "Large Chest (L)", 
                      "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it...",
-                     contains=[FCnote1] )
-musicnote_G = Object("Broken Frame", "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...")
-clockCH=Puzzle("Clock", 
+                     contains=[FCnote1],
+                      letter="L")
+musicnote_G = Object("Broken Frame (F)", 
+                     "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...",
+                     letter="F")
+clockCH=Puzzle("Clock (C)", 
                "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
-               "3:33 am")
+               "3:33 am",
+               letter="C")
 
 
 #library objects
@@ -462,30 +475,30 @@ musicnote_A=Object("Inscripted Frame (F)",
                    letter="F")
 
 #Ballroom objects
-musicenote_CE=Object("Framed Music Notes", 
-                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-FCnote2=Clue("A small ripped note", 
+musicenote_CE=Object("Framed Music Notes (F)", 
+                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",letter="F")
+FCnote2=Clue("A small ripped note (N)", 
                f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
-               label= "A small ripped note")
-piano=Puzzle("Grand Piano", 
-             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE")
+               label= "A small ripped note",letter="N")
+piano=Puzzle("Grand Piano (P)", 
+             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE",letter="P")
 
 #Dungeon objects
-bench=Object("Bench", 
-             "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?")
-coveredTable=Clue("Covered Table", 
-                  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...")#coveredTable must be moved under the cellar doors to reveal the final puzzle
-finaldoor=Puzzle("Cellar Doors", 
+bench=Object("Bench (B)", 
+             "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?",letter="B") #decoy object, 
+coveredTable=Clue("Covered Table (T)", 
+                  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...",letter="T")#coveredTable must be moved under the cellar doors to reveal the final puzzle
+finaldoor=Puzzle("Cellar Doors (D)", 
                  "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
-                 door_code)
+                 door_code,letter="D")
 
 #Randomized objects (not yet implemented)
-vintageThrone=SpecialInteract("Vintage Throne", 
+vintageThrone=SpecialInteract("Vintage Throne (V)", 
                      "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?",
-                     throne_func, throne_continue_texts)#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
-handMirror=SpecialInteract("Hand Mirror",
+                     throne_func, throne_continue_texts,letter="V")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
+handMirror=SpecialInteract("Hand Mirror (M)",
                    "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?",
-                     mirror_func, mirror_continue_texts) #if yes get 5 minute resoration, if no, nothing happen
+                     mirror_func, mirror_continue_texts,letter="M") #if yes get 5 minute resoration, if no, nothing happen
 
 vintageThrone.examined = True # act as if these have already been examined
 handMirror.examined = True # so the player can continue without ever interacting with them
