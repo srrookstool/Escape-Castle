@@ -33,6 +33,7 @@ class Player:
     def __init__(self, name, startTime=1800):
         self.name = name
         self.inv = []
+        self.notes = dict()
         self.position = None
         self.startTime = startTime
         self.timeRemaining = startTime
@@ -78,6 +79,12 @@ class Player:
                 print(f"• {item.name}")
                 print("    " + wrap(item.description, 46))
                 print()
+        
+        if self.notes:
+            print(f"\n" + " Journal ".center(50, '='))
+            for note_name, entries in self.notes.items():
+                print(f"{note_name}: {', '.join(entries)}")
+            print()
 
         print("═" * 50)
         
@@ -215,6 +222,20 @@ class Clue(Pickup):
         self.isInspected = True
         self.examined = True
 
+class Noteable(Object):
+    def __init__(self, name, description, note_parent, note_entries, label=None, interactTime=5, letter=None):
+        super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
+        self.note_parent = note_parent
+        self.note_entries = note_entries if isinstance(note_entries, list) else [note_entries]
+
+    def examine(self, player):
+        super().examine(player, endInteraction=False)
+        if self.note_parent not in player.notes:
+            player.notes[self.note_parent] = []
+        player.notes[self.note_parent] += self.note_entries
+        print(f"📝 You've noted something about {self.note_parent} in your journal.")
+        input("Press enter to continue...")
+        
 class Puzzle(Object):
     def __init__(self,name, description, answer, label=None, interactTime=5, letter=None):
         super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
@@ -272,7 +293,7 @@ class SpecialInteract(Object):
             self.special_call(player)
             print(self.continue_texts[0])
         else:
-            print(self.coninue_texts[1])
+            print(self.continue_texts[1])
             
         input("Press enter to continue...")
             
@@ -444,8 +465,9 @@ large_chest = Object( "Large Chest (L)",
                      "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it...",
                      contains=[FCnote1],
                       letter="L")
-musicnote_G = Object("Broken Frame (F)", 
+musicnote_G = Noteable("Broken Frame (F)", 
                      "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...",
+                     'Music Notes', 'G',
                      letter="F")
 clockCH=Puzzle("Clock (C)", 
                "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
@@ -470,13 +492,16 @@ desk=Puzzle("A Clutery Desk (D)",
              "You study the framed picture on the desk... it must point to the correct book.",
             book_answer,
             letter="D")
-musicnote_A=Object("Inscripted Frame (F)", 
+musicnote_A=Noteable("Inscripted Frame (F)", 
                    "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                   "Music Notes", "A",
                    letter="F")
 
 #Ballroom objects
-musicenote_CE=Object("Framed Music Notes (F)", 
-                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",letter="F")
+musicenote_CE = Noteable("Framed Music Notes (F)", 
+                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                     "Music Notes", ["C", "E"],
+                     letter="F")
 FCnote2=Clue("A small ripped note (N)", 
                f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
                label= "A small ripped note",letter="N")
