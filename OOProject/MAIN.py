@@ -494,14 +494,21 @@ finaldoor=Puzzle("Cellar Doors (D)",
 
 #Randomized objects (not yet implemented)
 vintageThrone=SpecialInteract("Vintage Throne (V)", 
-                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..?",
+                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..? (y/n)",
                      throne_func, throne_continue_texts,letter="V")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
 handMirror=SpecialInteract("Hand Mirror (M)",
-                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..?",
+                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..? (y/n)",
                      mirror_func, mirror_continue_texts,letter="M") #if yes get 5 minute resoration, if no, nothing happen
 
 vintageThrone.examined = True # act as if these have already been examined
+throne_room_weights = [0.2, 0.5, 0.2, 0.1] # foyer, library, ballroom, dungeon
 handMirror.examined = True # so the player can continue without ever interacting with them
+mirror_room_weights = [0.2, 0.2, 0.4, 0.2]
+
+if should_throne:
+    random.choices([foyer, library, ballroom, dungeon], weights=throne_room_weights)[0].objects.append(vintageThrone)
+if should_mirror:
+    random.choices([foyer, library, ballroom, dungeon], weights=mirror_room_weights)[0].objects.append(handMirror)
 
 # --- ADD OBJECTS TO ROOMS ---
 foyer.objects.append(large_chest)
