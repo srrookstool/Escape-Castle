@@ -254,7 +254,12 @@ class Puzzle(Object):
     
     def startPuzzle(self, player):
         while not self.isSolved:
-            answer = input("Enter your solution: ").lower().strip()
+            answer = input("Enter solution or exit to room (R): ").lower().strip()
+
+            # exiting puzzle back to room 
+            if answer in ["r", "exit"]:
+                print("\nYou step away from the puzzle and return to the room.\n")
+                return  # leave puzzle without penalty
 
             if answer == self.answer.lower():
                 print("\nCorrect!")
@@ -451,10 +456,10 @@ should_throne = random.random() < 0.2 # 20% chance
 should_mirror = random.random() < 0.3 # 30% chance
 
 # --- CREATE ROOMS ---
-foyer = Room("Foyer", "You go to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
+foyer = Room("Foyer", "Looking around... you find a way to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
 library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. You start to look around... ")
-ballroom = Room("Ballroom", "... as you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
-dungeon = Room("Dungeon", "… once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to open the lock to exit...")
+ballroom = Room("Ballroom", "... As you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
+dungeon = Room("Dungeon", "… Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to open the lock to exit...")
 
 # --- CREATE OBJECTS ---    
 #foyer objects
@@ -504,15 +509,18 @@ musicenote_CE = Noteable("Framed Music Notes (F)",
                      letter="F")
 FCnote2=Clue("A small ripped note (N)", 
                f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
-               label= "A small ripped note",letter="N")
+               label= "A small ripped note (N)",letter="N")
 piano=Puzzle("Grand Piano (P)", 
-             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...", "CAGE",letter="P")
+             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change Enter the notes...", "CAGE",letter="P")
 
 #Dungeon objects
 bench=Object("Bench (B)", 
-             "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?",letter="B") #decoy object, 
-coveredTable=Clue("Covered Table (T)", 
-                  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...",letter="T")#coveredTable must be moved under the cellar doors to reveal the final puzzle
+             "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?",
+             letter="B") #decoy object, 
+coveredTable=Clue("Covered Table", 
+                  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...",
+                  label="A covered table (T)",
+                  letter="T")#coveredTable must be moved under the cellar doors to reveal the final puzzle
 finaldoor=Puzzle("Cellar Doors (D)", 
                  "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
                  door_code,letter="D")
