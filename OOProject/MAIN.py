@@ -315,7 +315,6 @@ class Challenge:
 
     def startChallenge(self, player):
         print("\n" + self.startText)
-        input("Press ENTER to begin...")
 
         if self.puzzle:
             self.puzzle.startPuzzle(player)
@@ -511,7 +510,7 @@ FCnote2=Clue("A small ripped note (N)",
                f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
                label= "A small ripped note (N)",letter="N")
 piano=Puzzle("Grand Piano (P)", 
-             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change Enter the notes...", "CAGE",letter="P")
+             "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change...", "CAGE",letter="P")
 
 #Dungeon objects
 bench=Object("Bench (B)", 
@@ -580,7 +579,7 @@ desk.triggersChallenge = True
 
 ballroomChallenge = Challenge(
     "Ballroom Challenge",
-    "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change- the top of the paino opens when you play the correct notes, revealing an opening. Enter the notes...",
+    "Enter the notes...",
     "The piano lid opens — you slide inside and drop into the dungeon."
 )
 ballroomChallenge.puzzle = piano
