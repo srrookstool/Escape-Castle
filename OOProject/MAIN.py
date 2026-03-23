@@ -448,22 +448,22 @@ door_code = f'{random.randint(0,9999):04}'
 
 
 throne_func, throne_continue_text_yes = random.choice([
-    (lambda player: player.restoreTime(), "throne restore time todo"), # restore all time (implement actual text)
-    (lambda player: player.modTime(-300), "throne lose time todo") # lose 5 minutes (implement actual text)
+    (lambda player: player.restoreTime(), "The throne accepts you and the spirts do no harm.... time restored"), # restore all time (implement actual text)
+    (lambda player: player.modTime(-300), "The throne denies your presence within the castle... the spirts want you OUT...your time is slipping away...lost five minutes") # lose 5 minutes (implement actual text)
 ])
 throne_continue_texts = [throne_continue_text_yes, "throne do nothing todo"]
 
 mirror_func = lambda player: player.modTime(300) # no randomness but this was best place to put it
-mirror_continue_texts = ["mirror gain time todo", "mirror do nothing todo"]
+mirror_continue_texts = ["You turn the mirror around to take another glance...the spirt is no longer there...five minutes added", "You put the mirror down, not daring to look again..."]
 
-should_throne = random.random() < 0.2 # 20% chance
+should_throne = random.random() < 0.3 # 30% chance
 should_mirror = random.random() < 0.3 # 30% chance
 
 # --- CREATE ROOMS ---
 foyer = Room("Foyer", "Looking around... you find a way to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
-library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. You start to look around... ")
+library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. The library is filled with old and worn books, some of them are so old that they are falling apart. There is a large wooden desk in the corner of the library, with a drawer that is slightly open with scattered papers and pens....")
 ballroom = Room("Ballroom", "... As you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
-dungeon = Room("Dungeon", "… Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to open the lock to exit...")
+dungeon = Room("Dungeon", "… Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to find their way out...")
 
 # --- CREATE OBJECTS ---    
 #foyer objects
@@ -487,7 +487,7 @@ clockCH=Puzzle("Clock (C)",
 #library objects
 book1=Clue("Romeo and Juliet",
            "You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", 
-           label="A blood-stained, spine-split book (B)",
+           label="A blood-stained book (B)",
            letter="B")
 book2=Clue("The Great Gatsby",
            "You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", 
@@ -495,14 +495,14 @@ book2=Clue("The Great Gatsby",
            letter="R")
 book3=Clue("Sherlock Holmes",
            "You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.",
-             label="A skin-bound, iron-nailed grimoire edition (E)",
+             label="A skin-bound, iron-nailed edition (E)",
              letter="E")
 desk=Puzzle("A Clutery Desk (D)",
              "You study the framed picture on the desk... it must point to the correct book.",
             book_answer,
             letter="D")
 musicnote_A=Noteable("Inscripted Frame (F)", 
-                   "You see a large music note barely hanging on the wall, it is the note A, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                   "You see a large music note barely hanging on the wall, you go closer to the, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
                    "Music Notes", "A",
                    letter="F")
 
@@ -529,12 +529,12 @@ finaldoor=Puzzle("Cellar Doors (D)",
                  "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
                  door_code,letter="D")
 
-#Randomized objects (not yet implemented)
+#Randomized objects
 vintageThrone=SpecialInteract("Vintage Throne (V)", 
-                     "You see a large, ornate throne in the center of the dungeon. It is made of dark wood and has intricate carvings. Do you dare to sit down..? (y/n)",
+                     "You see a large throne in the center of the room. Walking over to it, you see that it is made of dark wood and has detailed carvings. Do you dare to sit down..? (y/n)",
                      throne_func, throne_continue_texts,letter="V")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
 handMirror=SpecialInteract("Hand Mirror (M)",
-                   "You see a small hand mirror on the ground, it is old and cracked, but it still reflects your image. As you look into the mirror, you see a faint image of a ghostly figure behind you. Do you dare to look again..? (y/n)",
+                   "You see a small hand mirror on the ground, it is old and cracked, looking into it, the mirror reflects your image. Behind you, you see a faint image of a ghostly figure lurking over your shoulder- you turn the mirror away quickly. Do you dare to look again..? (y/n)",
                      mirror_func, mirror_continue_texts,letter="M") #if yes get 5 minute resoration, if no, nothing happen
 
 vintageThrone.examined = True # act as if these have already been examined
@@ -575,7 +575,7 @@ clockCH.triggersChallenge = True
 
 libraryChallenge = Challenge(
     "Book Challenge",
-    book_challenge_text, # look above at random generated parts
+    wrap(book_challenge_text, 70), # look above at random generated parts
     "The bookcase slides aside, revealing a spiraling staircase downward..."
 )
 libraryChallenge.puzzle = desk
@@ -644,7 +644,7 @@ def gameLoop():
         print(f"⏳  Time Remaining: {player.timeRemaining // 60} minutes and {player.timeRemaining % 60} seconds\n")
         current_room.enterRoom()
 
-        # Show inventory button only after chest is opened
+        # Show inventory button 
         if inventory_button:
             print(f"{'[ Press (i) for Inventory ]':>70}")
         
@@ -656,7 +656,7 @@ def gameLoop():
         else:
            valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
 
-        # Unlock inventory button when Large Chest is examined and opened
+        # Unlock inventory button 
         if not valid_room_interaction:
                 print("Not a valid interaction.")
                 input("Press enter to continue...")
