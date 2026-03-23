@@ -254,7 +254,7 @@ class Puzzle(Object):
     
     def startPuzzle(self, player):
         while not self.isSolved:
-           answer = input("Enter solution, exit to room (R) or check Inventory (i): ").lower().strip()
+            answer = input("Enter solution, exit to room (R) or check Inventory (i): ").lower().strip()
 
             # exiting puzzle back to room 
             if answer in ["r", "exit"]:
@@ -265,6 +265,9 @@ class Puzzle(Object):
                 player.checkInventory()
                 input("Press enter to continue...")
                 answer = input("Enter solution, exit to room (R) or check Inventory (i): ").lower().strip()
+                if answer in ["r", "exit"]:
+                    print("\nYou step away from the puzzle and return to the room.\n")
+                    return
 
             if answer == self.answer.lower():
                 print("\nCorrect!")
