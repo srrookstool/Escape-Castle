@@ -212,7 +212,9 @@ Both endings allow the player to restart or exit.
 ---
 
 ## Features Implemented
-- Full OOP class hierarchy  
+- Full OOP class hierarchy
+- Parent to Child Class Inheritance
+- Encapsulation
 - Room‑based progression  
 - Inventory system  
 - Time management system  
