@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://1p1nc4jfq6v2"]
+
+[ext_resource type="Texture2D" uid="uid://642wml2nxjbn" path="res://Refined haunted libr.png" id="1_2cia1"]
+
+[node name="RefinedHauntedLibr" type="Sprite2D"]
+position = Vector2(576, 322.5)
+scale = Vector2(0.74869794, 0.62597656)
+texture = ExtResource("1_2cia1")
+
+[node name="romeoandjuliet" type="Button" parent="."]
+offset_left = -390.01044
+offset_top = -250.00934
+offset_right = -364.63306
+offset_bottom = -178.12167
+
+[node name="sherlock" type="Button" parent="."]
+offset_left = -104.18091
+offset_top = -257.9969
+offset_right = -49.433044
+offset_bottom = -189.30423
+
+[node name="gatsby" type="Button" parent="."]
+offset_left = -384.66782
+offset_top = -95.05148
+offset_right = -339.26956
+offset_bottom = -27.14508
+
+[node name="desk" type="Button" parent="."]
+offset_left = -311.20697
+offset_top = 82.27144
+offset_right = 327.2348
+offset_bottom = 224.44934
+
+[node name="frame" type="Button" parent="."]
+offset_left = 134.90091
+offset_top = -283.55695
+offset_right = 307.18613
+offset_bottom = -132.58032
