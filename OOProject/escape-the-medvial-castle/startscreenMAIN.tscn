@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwj2sk0mdickh"]
+
+[ext_resource type="Texture2D" uid="uid://ddoocktnig0yi" path="res://Spooky forest title .png" id="1_qi0vt"]
+[ext_resource type="Script" uid="uid://xoish31iwpog" path="res://startscreen_main.gd" id="2_ud16e"]
+
+[node name="SpookyForestTitle" type="Sprite2D"]
+position = Vector2(576, 324)
+scale = Vector2(0.74869794, 0.6347656)
+texture = ExtResource("1_qi0vt")
+script = ExtResource("2_ud16e")
+
+[node name="startbutton" type="Button" parent="."]
+offset_left = -196.34085
+offset_top = 181.1692
+offset_right = 160.26434
+offset_bottom = 294.71997
+
+[connection signal="pressed" from="startbutton" to="." method="_on_startbutton_pressed"]
