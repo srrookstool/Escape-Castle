@@ -439,6 +439,9 @@ class Room():
 
         return True
 
+clock_hour = random.randint(1,12)
+clock_time = str(clock_hour) + f':{random.randint(0,59):02} ' + ('AM' if clock_hour == 12 or clock_hour < 8 else 'PM')
+
 # create random parts for puzzles
 book_answer, book_challenge_text_clue = random.choice([
     ("Romeo and Juliet", "rose"),
@@ -463,7 +466,7 @@ should_throne = random.random() < 0.3 # 30% chance
 should_mirror = random.random() < 0.3 # 30% chance
 
 # --- CREATE ROOMS ---
-foyer = Room("Foyer", "Looking around... you find a way to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of 3:33 AM. ")
+foyer = Room("Foyer", f"Looking around... you find a way to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of {clock_time}. ")
 library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. The library is filled with old and worn books, some of them are so old that they are falling apart. There is a large wooden desk in the corner of the library, with a drawer that is slightly open with scattered papers and pens....")
 ballroom = Room("Ballroom", "... As you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
 dungeon = Room("Dungeon", "… Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to find their way out...")
@@ -483,7 +486,7 @@ musicnote_G = Noteable("Broken Frame (F)",
                      letter="F")
 clockCH=Puzzle("Clock (C)", 
                "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
-               "3:33 am",
+               clock_time,
                letter="C")
 
 
@@ -608,7 +611,7 @@ finaldoor.triggersChallenge = True
 allChallenges = [foyerChallenge, libraryChallenge, ballroomChallenge, dungeonChallenge]
 
 #PUZZLE ANSWERS
-clockCH.answer = "3:33 am"
+clockCH.answer = clock_time
 desk.answer = book_answer # one of the books chosen at random, challenge text set to match
 piano.answer = "CAGE" #order matters
 finaldoor.answer = door_code #order matters, based on the notes found in the rooms
