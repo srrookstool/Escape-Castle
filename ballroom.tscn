@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://djlu3jjveq55g"]
+
+[ext_resource type="Texture2D" uid="uid://vegojdbbspmm" path="res://Haunted ballroom wit.png" id="1_ka2bo"]
+
+[node name="HauntedBallroomWit" type="Sprite2D"]
+position = Vector2(575, 323.00003)
+scale = Vector2(0.74869794, 0.63183594)
+texture = ExtResource("1_ka2bo")
+
+[node name="piano" type="Button" parent="."]
+offset_left = -751.97217
+offset_top = -99.70949
+offset_right = -309.87134
+offset_bottom = 106.83153
+
+[node name="frames" type="Button" parent="."]
+offset_left = 138.9078
+offset_top = 193.08804
+offset_right = 591.69385
+offset_bottom = 376.67993
+
+[node name="note" type="Button" parent="."]
+offset_left = -150.9287
+offset_top = 243.73407
+offset_right = -28.062607
+offset_bottom = 307.12827

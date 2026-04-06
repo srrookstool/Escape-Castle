@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://0l5rnsdhak4c"]
+
+[ext_resource type="Texture2D" uid="uid://b0633mbrxbw51" path="res://Dungeon scene with n.png" id="1_ijnbl"]
+
+[node name="DungeonSceneWithN" type="Sprite2D"]
+position = Vector2(633, 322)
+scale = Vector2(0.7467448, 0.6357422)
+texture = ExtResource("1_ijnbl")
+
+[node name="bench" type="Button" parent="."]
+offset_left = -692.33826
+offset_top = 55.053745
+offset_right = -348.17786
+offset_bottom = 226.50687
+
+[node name="table" type="Button" parent="."]
+offset_left = -223.63731
+offset_top = 84.94008
+offset_right = 121.86226
+offset_bottom = 213.92317
+
+[node name="cellar" type="Button" parent="."]
+offset_left = 155.34087
+offset_top = -185.60982
+offset_right = 608.64154
+offset_bottom = 180.89098

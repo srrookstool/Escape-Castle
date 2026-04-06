@@ -1,0 +1,708 @@
+import os
+import time
+from math import floor, ceil
+import random
+inventory_button = False
+
+
+import sys
+
+
+def add_addons_to_path():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    while current_dir and current_dir != os.path.dirname(current_dir):
+        potential_addons = os.path.join(current_dir, "addons")
+        if os.path.exists(potential_addons):
+            if potential_addons not in sys.path:
+                sys.path.append(potential_addons)
+            return True
+        current_dir = os.path.dirname(current_dir)
+    return False
+
+add_addons_to_path()
+try:
+    from py4godot.plugin_script import py_register
+    from py4godot.classes.generated import startbutton
+except ImportError:
+
+    def py_register(cls): return cls
+    class Node2D: pass
+    print("Error: Plugin not found")
+
+@py_register
+class MainModificato(Node2D):
+    def _ready(self):
+        print("main ready")
+	
+def _on_start_button_pressed(self):
+        print("The castle door opens...")
+        self.get_tree().change_scene_to_file("res://startscreenMAIN.tscn")
+
+
+from py4godot.classes.node import Node
+from py4godot.classes.classes import gdclass
+
+@gdclass
+class MainModificato(Node):
+    def __init__(self):
+        super().__init__()
+
+    def _ready(self):
+
+        print("Python is ready")
+
+    def avvia_gioco(self):
+        print("start the game")
+
+
+
+
+#text wrapper
+import textwrap
+def wrap(text, width=70):
+	return "\n".join(textwrap.wrap(text, width))
+
+#formatting helper
+def wrap(text, width=70):
+	import textwrap
+	return "\n".join(textwrap.wrap(text, width))
+
+def printTitle():
+   print("""
+░█▀▀░█▀▀░█▀▀░█▀█░█▀█░█▀▀░░░▀█▀░█░█░█▀▀░░░█▄█░█▀▀░█▀▄░▀█▀░█░█░█▀▀░█░█░█▀█░█░░░░░█▀▀░█▀█░█▀▀░▀█▀░█░░░█▀▀
+░█▀▀░▀▀█░█░░░█▀█░█▀▀░█▀▀░░░░█░░█▀█░█▀▀░░░█░█░█▀▀░█░█░░█░░▀▄▀░█▀▀░▀▄▀░█▀█░█░░░░░█░░░█▀█░▀▀█░░█░░█░░░█▀▀
+░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░░░░▀░░▀░▀░▀▀▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░░▀░░▀▀▀░░▀░░▀░▀░▀▀▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀
+""")
+
+def _on_start_button_pressed(self):
+        print("The castle door opens...")
+        # Sostituisci con il nome esatto della tua prima stanza
+        self.get_tree().change_scene_to_file("res://startscreenMAIN.tscn")
+
+
+# singleton - only one player
+class Player:
+	def __init__(self, name, startTime=1800):
+		self.name = name
+		self.inv = []
+		self.notes = dict()
+		self.position = None
+		self.startTime = startTime
+		self.timeRemaining = startTime
+		
+	
+	
+	def checkInventory(self):
+		print("\n" + "═" * 50)
+		print(f"🩸  INVENTORY  🩸".center(50))
+		print("═" * 50)
+
+		if not self.inv:
+			print("Your bag feels cold and empty...")
+		else:
+			for item in self.inv:
+				print(f"• {item.name}")
+				print("    " + wrap(item.description, 46))
+				print()
+		
+		if self.notes:
+			print(f"\n" + " Journal ".center(50, '='))
+			for note_name, entries in self.notes.items():
+				print(f"{note_name}: {', '.join(entries)}")
+			print()
+
+		print("═" * 50)
+		
+	def addItemInventory(self, item):
+		if item not in self.inv:
+			self.inv.append(item)
+			print(f"{item.name} added to the inventory")
+	
+	
+	def modTime(self, seconds):
+		self.timeRemaining = floor(self.timeRemaining + seconds)
+	
+	def restoreTime(self):
+		self.timeRemaining = self.startTime
+
+	def checkGameState(self, challenges):
+		# WIN CONDITION:
+		if all(ch.isCompleted for ch in challenges):
+			print("""░█░█░█▀█░█░█░░░█▀▀░█▀▀░█▀▀░█▀█░█▀█░█▀▀░█▀▄░█
+				   \r░░█░░█░█░█░█░░░█▀▀░▀▀█░█░░░█▀█░█▀▀░█▀▀░█░█░▀
+				   \r░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀░░▀""")
+			return True
+
+		# LOSE CONDITION: timer ran out
+		if self.timeRemaining <= 0:
+			print("""░▀█▀░▀█▀░█▄█░█▀▀░█▀▀░░░█░█░█▀█░█░░░█░█░█▀█░█░█░░░█░░░█▀█░█▀▀░█▀▀░█
+				   \r░░█░░░█░░█░█░█▀▀░▀▀█░░░█░█░█▀▀░▀░░░░█░░█░█░█░█░░░█░░░█░█░▀▀█░█▀▀░▀
+				   \r░░▀░░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀░░░▀░░░░▀░░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀""")
+			return True
+
+		# Game continues
+		return False
+
+class Object:
+	def __init__(self, name, description, contains=None, label=None, interactTime=5, letter=None):
+		self.name = name
+		self.description = description
+		self.label = label if label else name
+		self.contains = contains if contains else []
+		self.interactTime = interactTime
+		self.letter = letter
+		self.isOpened = False
+		self.isClue = False 
+		self.isPuzzle = None 
+		self.puzzle = None
+		self.triggersChallenge = False
+		self.examined = False
+
+		
+
+	def examine(self, player, endInteraction=True):
+		print("\n" + wrap(self.description) + "\n")
+		self.examined = True
+		
+		player.modTime(-self.interactTime) # take time away for interacting (default to 5 seconds for all objects)
+
+		# Unlock inventory button when Large Chest is opened
+		if self.letter and self.letter.lower() == "l":
+			global inventory_button
+			inventory_button = True
+		
+		# container handling
+		if self.contains:
+			self.isOpened = True
+			
+			print("🕸️  Inside the chest, you find:\n")
+			for item in self.contains:
+				print(f"  • {item.label}")
+			
+			# allow user to interact with contents
+			interact_attempt = input("\nWhat do you pick..... ").lower().strip()
+			interact_success = False
+			for item in self.contains:
+				if (
+					interact_attempt == item.name.lower()
+					or interact_attempt == item.label.lower()
+					or (item.letter and interact_attempt == item.letter.lower())
+				):
+					interact_success = True
+					item.examine(player)
+					if isinstance(item, Pickup) and item.isPickedUp:
+						self.contains.remove(item)
+						
+			
+			if interact_attempt and not interact_success:
+				print(f"{interact_attempt.capitalize()} is not in {self.name}")
+
+		if endInteraction:
+			input("Press enter to continue...")
+
+		# DO NOT start puzzles here
+		return self.triggersChallenge
+
+class Pickup(Object):
+	def __init__(self, name, description, label=None, interactTime=5, pickupTime=5, letter=None):
+		super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
+		self.pickupTime = pickupTime
+		
+		self.isPickedUp = False
+		
+	def pickUp(self, player):
+		if not self.isPickedUp:
+			self.isPickedUp = True
+			player.modTime(-self.pickupTime)
+			player.addItemInventory(self)
+
+	def examine(self, player):
+		super_return = super().examine(player, endInteraction=False) # call inherited examine and delay return
+		
+		if not self.isPickedUp:
+			# give the player the option to take the item
+			choice = input(f"Would you like to pick up: {self.name}? (y/n): ").lower()
+			if choice == 'y':
+				self.pickUp(player)
+			else:
+				print(f"You leave the {self.name} where it is.")
+		else:
+			# in inventory, do nothing
+			input("Press enter to continue...")    
+		
+		return super_return            
+		
+class Clue(Pickup):
+	def __init__(self, name, description, label=None, interactTime=5, pickupTime=5, letter=None):
+		if label is None and letter is not None:
+			label = letter
+		super().__init__(name, description, label=label, interactTime=interactTime, pickupTime=pickupTime, letter=letter)
+		self.isClue = True
+		self.isInspected = False
+		self.examined = True
+		
+	
+	def examine(self, player):
+		super().examine(player)
+		self.isInspected = True
+		self.examined = True
+
+class Noteable(Object):
+	def __init__(self, name, description, note_parent, note_entries, label=None, interactTime=5, letter=None):
+		super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
+		self.note_parent = note_parent
+		self.note_entries = note_entries if isinstance(note_entries, list) else [note_entries]
+
+	def examine(self, player):
+		super().examine(player, endInteraction=False)
+		if self.note_parent not in player.notes:
+			player.notes[self.note_parent] = []
+		player.notes[self.note_parent] += self.note_entries
+		print(f"📝 You've noted something about {self.note_parent} in your journal.")
+		input("Press enter to continue...")
+		
+class Puzzle(Object):
+	def __init__(self,name, description, answer, label=None, interactTime=5, letter=None):
+		super().__init__(name, description, label=label, interactTime=interactTime, letter=letter)
+		self.answer = answer
+		self.isSolved = False
+		self.wrongTimeLoss = 60
+		self.naTimeLoss = 30
+
+
+	def examine(self, player):
+		if not self.examined:
+			print("\n" + wrap(self.description) + "\n")
+
+		self.examined = True
+		return False
+	
+	def startPuzzle(self, player):
+		while not self.isSolved:
+			answer = input("Enter solution, exit to room (R) or check Inventory (i): ").lower().strip()
+
+			# exiting puzzle back to room 
+			if answer in ["r", "exit"]:
+				print("\nYou step away from the puzzle and return to the room.\n")
+				return  # leave puzzle without penalty
+			
+			if answer in ["i", "inventory", "inv"]:
+				player.checkInventory()
+				input("Press enter to continue...")
+				answer = input("Enter solution, exit to room (R) or check Inventory (i): ").lower().strip()
+				if answer in ["r", "exit"]:
+					print("\nYou step away from the puzzle and return to the room.\n")
+					return
+
+			if answer == self.answer.lower():
+				print("\nCorrect!")
+				self.isSolved = True
+				break
+
+			if answer:
+				player.modTime(-self.wrongTimeLoss)
+				print("\nYou entered that wrong... time has been deducted.")
+			else:
+				player.modTime(-self.naTimeLoss)
+				print("\nYou hesitated... time has been deducted.")
+
+			input("Press ENTER to try again...")
+
+	
+	def failPuzzle(self):
+		pass
+	
+	def isPuzzle(self):
+		pass
+	
+
+class SpecialInteract(Object):
+	def __init__(self, name, description, special_call, continue_texts, interactTime=5, letter=None):
+		super().__init__(name, description, interactTime=interactTime, letter=letter)
+		self.special_call = special_call # function called for yes      
+		self.continue_texts = continue_texts # texts for yes and no
+	
+	def examine(self, player):
+		super().examine(player, endInteraction=False)
+		
+		# prompt user for yes or no
+		choice = input().lower()
+		if choice in ["y", "yes"]:
+			self.special_call(player)
+			print(self.continue_texts[0])
+		else:
+			print(self.continue_texts[1])
+			
+		input("Press enter to continue...")
+			
+		
+
+class Challenge:
+	def __init__(self, name, startText, completionText, letter=None):
+		self.name = name
+		self.startText = startText
+		self.completionText = completionText
+		self.letter = letter
+		self.puzzle = None
+		self.isCompleted = False
+
+	def startChallenge(self, player):
+		print("\n" + self.startText)
+
+		if self.puzzle:
+			self.puzzle.startPuzzle(player)
+
+		if self.puzzle and self.puzzle.isSolved:
+			self.completeChallenge()
+
+	def completeChallenge(self):
+		self.isCompleted = True
+		print("\n" + self.completionText)
+	
+	
+class Room():
+	def __init__(self, name, description):
+		self.name = name
+		self.description = description
+		self.objects = []
+		self.challenges = []
+	
+	def enterRoom(self):
+		# Room header
+		print("\n" + "─" * 70)
+		print(f"🕯️  {self.name.upper()}")
+		print("─" * 70 + "\n")
+
+		# Room description
+		print(wrap(self.description))
+
+		# Object list
+		print("You look around and see:\n")
+
+		for obj in self.objects:
+			print(wrap(f"  • {obj.label}"))
+
+		# If any containers were opened earlier, show their revealed items
+		for obj in self.objects:
+			if obj.contains and obj.isOpened:
+				print("\n  👁️  Revealed items:")
+				for item in obj.contains:
+					print(f"    → {item.name}")
+
+
+		print("\n" + "─" * 70)
+
+
+	def userInteract(self, player, attempt):
+		target_obj = None
+		for obj in self.objects:
+			if (
+				attempt.lower() == obj.name.lower()
+				or attempt.lower() == obj.label.lower()
+				or (obj.letter and attempt.lower() == obj.letter.lower())
+			):
+				target_obj = obj
+				break
+
+		if not target_obj:
+			return False # no valid interaction
+
+		# Examine the object once
+		target_obj.examine(player)
+		
+		# if object is specialInteract remove it from room after interaction
+		if isinstance(target_obj, SpecialInteract):
+			self.objects.remove(target_obj)
+
+		# If this is a puzzle object, we treat it as the challenge trigger
+		is_puzzle_trigger = isinstance(target_obj, Puzzle) and target_obj.triggersChallenge
+
+		if is_puzzle_trigger:
+			# Only allow challenge if everything has been examined
+			if not self.allObjectsExamined():
+				print("\nYou feel like you haven't examined everything yet...")
+				input("Press ENTER to continue...")
+				return target_obj
+
+			# All objects examined → start challenge
+			if self.challenges and not self.challenges[0].isCompleted:
+				self.challenges[0].startChallenge(player)
+
+		return target_obj # no valid interaction
+	
+
+	def allObjectsExamined(self):
+		for obj in self.objects:
+			# Clues must be inspected
+			if obj.isClue and not obj.isInspected:
+				return False
+
+			# Puzzle objects must be examined (but not solved yet)
+			if isinstance(obj, Puzzle) and not obj.examined:
+				return False
+
+			# Normal objects must be examined
+			if not obj.isClue and not isinstance(obj, Puzzle) and not obj.examined:
+				return False
+
+		return True
+	def attemptExit(self):
+		# Must inspect all clues
+		for obj in self.objects:
+			if obj.isClue and not obj.isInspected:
+				return False
+
+
+		# Must examine all objects
+		if not self.allObjectsExamined():
+			return False
+
+		# Must complete the challenge
+
+		if self.challenges and not self.challenges[0].isCompleted:
+			return False
+
+		return True
+
+clock_hour = random.randint(1,12)
+clock_time = str(clock_hour) + f':{random.randint(0,59):02} ' + ('AM' if clock_hour == 12 or clock_hour < 8 else 'PM')
+
+# create random parts for puzzles
+book_answer, book_challenge_text_clue = random.choice([
+	("Romeo and Juliet", "rose"),
+	("The Great Gatsby", "clock"),
+	("Sherlock Holmes", "dagger")
+])
+book_challenge_text = f"You see a large wooden desk in the corner of the library, with a drawer that is slightly open. You see has scattered papers and pens, but what catches your eye is a framed picture of a {book_challenge_text_clue}."
+
+door_code = f'{random.randint(0,9999):04}'
+
+
+throne_func, throne_continue_text_yes = random.choice([
+	(lambda player: player.restoreTime(), "The throne accepts you and the spirts do no harm.... time restored"), # restore all time (implement actual text)
+	(lambda player: player.modTime(-300), "The throne denies your presence within the castle... the spirts want you OUT...your time is slipping away...lost five minutes") # lose 5 minutes (implement actual text)
+])
+throne_continue_texts = [throne_continue_text_yes, "throne do nothing todo"]
+
+mirror_func = lambda player: player.modTime(300) # no randomness but this was best place to put it
+mirror_continue_texts = ["You turn the mirror around to take another glance...the spirt is no longer there...five minutes added", "You put the mirror down, not daring to look again..."]
+
+should_throne = random.random() < 0.3 # 30% chance
+should_mirror = random.random() < 0.3 # 30% chance
+
+# --- CREATE ROOMS ---
+foyer = Room("Foyer", f"Looking around... you find a way to access the castle, there is a huge staircase that branches off to the right and left, with a huge fountain in the center that emerges from the wall. The door is huge and old, and when it opens, using a lot of force, it makes a creaking and frightening noise. Once inside, you admire a long red carpet, all worn and dirty, which reaches the foot of the stairs. To the left, next to the door, there is a coat rack, and to the right, there is a huge table with a chessboard on it. Behind the table, there is a fireplace that magically lights up once the door is opened. The room is dark, and the only source of light is the fireplace, which illuminates the entire room. In the left corner, you can admire a beautiful antique pendulum clock that reads the time of {clock_time}. ")
+library = Room("Library", "The large oak grandfather clock creaks as it opens... you peak through, combing through spider webs to see walls lined with books,and another room with no way out.(insert door sliding old noise)” “You have now entered the library-it is covered in spider webs, and the only light is through the large window barley covered by fallen drapes. The library is filled with old and worn books, some of them are so old that they are falling apart. There is a large wooden desk in the corner of the library, with a drawer that is slightly open with scattered papers and pens....")
+ballroom = Room("Ballroom", "... As you are walking down the spiraling stairs, you start to see a golden light appear and the faint sound of.... Classical music? - the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
+dungeon = Room("Dungeon", "… Once inside, visibility is very low, with light coming in through two windows with bars positioned very high up and out of reach. The dungeon is full of cobwebs and dust, and at the back, almost invisible, is a prison with pieces of rock forming a bench. The dungeon is full of covered and dusty objects. On the darkest side of the dungeon is an opening that allows only those who guess the code to find their way out...")
+
+# --- CREATE OBJECTS ---    
+#foyer objects
+FCnote1=Clue("Half Note", f"The note reads: {door_code[2:]}.", 
+			 label="A small ripped note (N)",
+			 letter="N")
+large_chest = Object( "Large Chest (L)", 
+					 "You see a large chest on the ground to your right- while brushing away spider webs you notice it looks old and worn,  but it might contain something useful-you open it...",
+					 contains=[FCnote1],
+					  letter="L")
+musicnote_G = Noteable("Broken Frame (F)", 
+					 "You see a large music note barely hanging on the wall, it is the note G, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music...",
+					 'Music Notes', 'G',
+					 letter="F")
+clockCH=Puzzle("Clock (C)", 
+			   "You walk up to the clock... it is frozen at midnight. Something feels wrong.", 
+			   clock_time,
+			   letter="C")
+
+
+#library objects
+book1=Clue("Romeo and Juliet",
+		   "You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out- it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.", 
+		   label="A blood-stained book (B)",
+		   letter="B")
+book2=Clue("The Great Gatsby",
+		   "You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out- it has an image of a clock on it, and the words 'So we beat on, boats against the current, borne back ceaselessly into the past' written on it.", 
+		   label="A worm-eaten, leather-bound relic (R)",
+		   letter="R")
+book3=Clue("Sherlock Holmes",
+		   "You pull out a tattered copy of Sherlock Holmes, and as you open it, you see a piece of paper fall out- it has an image of a dagger on it, and the words 'When you have eliminated the impossible, whatever remains, however improbable, must be the truth' written on it.",
+			 label="A skin-bound, iron-nailed edition (E)",
+			 letter="E")
+desk=Puzzle("A Clutery Desk (D)",
+			 "You study the framed picture on the desk... it must point to the correct book.",
+			book_answer,
+			letter="D")
+musicnote_A=Noteable("Inscripted Frame (F)", 
+				   "You see a large music note barely hanging on the wall, you go closer to the, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+				   "Music Notes", "A",
+				   letter="F")
+
+#Ballroom objects
+musicenote_CE = Noteable("Framed Music Notes (F)", 
+					 "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+					 "Music Notes", ["C", "E"],
+					 letter="F")
+FCnote2=Clue("A small ripped note (N)", 
+			   f"You see a small ripped note on the ground, badly worn, you pick it up and read the numbers on it- it contains two digits - piece of paper for the final code: {door_code[:2]}.", 
+			   label= "A small ripped note (N)",letter="N")
+piano=Puzzle("Grand Piano (P)", 
+			 "You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. You sit down and start to play the notes you found in the foyer and library, and as you play, you notice that the music starts to change...", "CAGE",letter="P")
+
+#Dungeon objects
+bench=Object("Bench (B)", 
+			 "You see a bench made of rock in the corner of the dungeon, you walk over to examine it and you see a multiple carvings of combinations of the same four numbers from the notes all over the bench... what could this mean?",
+			 letter="B") #decoy object, 
+coveredTable=Clue("Covered Table", 
+				  "You see a covered table in the corner of the dungeon, you pull off the cover while coughing from the dust you drag the table tunder  the cellar doors hoping to reach the exit...",
+				  label="A covered table (T)",
+				  letter="T")#coveredTable must be moved under the cellar doors to reveal the final puzzle
+finaldoor=Puzzle("Cellar Doors (D)", 
+				 "You uncover a set of cellar doors-hoping they head outside you think about what you have found so far- You try to piece together the clues and figure out the code to open the door. Enter your choices carefully as there may be a consequence... :",
+				 door_code,letter="D")
+
+#Randomized objects
+vintageThrone=SpecialInteract("Vintage Throne (V)", 
+					 "You see a large throne in the center of the room. Walking over to it, you see that it is made of dark wood and has detailed carvings. Do you dare to sit down..? (y/n)",
+					 throne_func, throne_continue_texts,letter="V")#50/50- sleep potion-lose all time down to 5 minutes, or energizer potion- full restoration of time 
+handMirror=SpecialInteract("Hand Mirror (M)",
+				   "You see a small hand mirror on the ground, it is old and cracked, looking into it, the mirror reflects your image. Behind you, you see a faint image of a ghostly figure lurking over your shoulder- you turn the mirror away quickly. Do you dare to look again..? (y/n)",
+					 mirror_func, mirror_continue_texts,letter="M") #if yes get 5 minute resoration, if no, nothing happen
+
+vintageThrone.examined = True # act as if these have already been examined
+throne_room_weights = [0.2, 0.5, 0.2, 0.1] # foyer, library, ballroom, dungeon
+handMirror.examined = True # so the player can continue without ever interacting with them
+mirror_room_weights = [0.2, 0.2, 0.4, 0.2]
+
+if should_throne:
+	random.choices([foyer, library, ballroom, dungeon], weights=throne_room_weights)[0].objects.append(vintageThrone)
+if should_mirror:
+	random.choices([foyer, library, ballroom, dungeon], weights=mirror_room_weights)[0].objects.append(handMirror)
+
+# --- ADD OBJECTS TO ROOMS ---
+foyer.objects.append(large_chest)
+foyer.objects.append(musicnote_G)
+foyer.objects.append(clockCH)
+library.objects.append(book1)
+library.objects.append(book2)
+library.objects.append(book3)
+library.objects.append(desk)
+library.objects.append(musicnote_A)
+ballroom.objects.append(musicenote_CE)
+ballroom.objects.append(piano)
+ballroom.objects.append(FCnote2)
+dungeon.objects.append(bench)
+dungeon.objects.append(coveredTable)
+dungeon.objects.append(finaldoor)      
+
+#CREATE CHALLENGES AND CONNECTION TO PUZZLES,OBJECTS,ROOMS
+foyerChallenge = Challenge(
+	"Clock Challenge",
+	"... put the clock back at the correct time...",
+    "A large oak grandfather clock opens at the top of the grand staircase — you enter."
+)
+foyerChallenge.puzzle = clockCH
+foyer.challenges.append(foyerChallenge)
+clockCH.triggersChallenge = True
+
+libraryChallenge = Challenge(
+	"Book Challenge",
+	wrap(book_challenge_text, 70), # look above at random generated parts
+    "The bookcase slides aside, revealing a spiraling staircase downward..."
+)
+libraryChallenge.puzzle = desk
+library.challenges.append(libraryChallenge)
+desk.triggersChallenge = True
+
+ballroomChallenge = Challenge(
+	"Ballroom Challenge",
+	"Enter the notes...",
+    "The piano lid opens — you slide inside and drop into the dungeon."
+)
+ballroomChallenge.puzzle = piano
+ballroom.challenges.append(ballroomChallenge)
+piano.triggersChallenge = True
+
+
+dungeonChallenge = Challenge(
+	"Dungeon Challenge",
+	"The cellar doors loom above you... only the correct code will open them.",
+    "The lock clicks open. The doors swing outward. You escape the castle."
+)
+dungeonChallenge.puzzle = finaldoor
+dungeon.challenges.append(dungeonChallenge)
+finaldoor.triggersChallenge = True
+
+
+allChallenges = [foyerChallenge, libraryChallenge, ballroomChallenge, dungeonChallenge]
+
+#PUZZLE ANSWERS
+clockCH.answer = clock_time
+desk.answer = book_answer # one of the books chosen at random, challenge text set to match
+piano.answer = "CAGE" #order matters
+finaldoor.answer = door_code #order matters, based on the notes found in the rooms
+ 
+# main game loop
+def gameLoop():
+	global inventory_button
+	printTitle()
+
+	name = "player1" # Temporary placeholder
+	player = Player(name)
+
+
+	rooms=[foyer, library, ballroom, dungeon]
+	room_index = 0
+	current_room = rooms[room_index]
+	
+	#DEBUG FUNCTIONS, COMMENT OUT WHEN NOT TESTING
+	if name == "library":
+		room_index = 1
+		current_room = library
+	elif name == "ballroom":
+		room_index = 2
+		current_room = ballroom
+	elif name == "dungeon":
+		room_index = 3
+		current_room = dungeon
+	
+	while True:
+		startTurn = time.time()
+		os.system('cls' if os.name == 'nt' else 'clear')
+		
+
+		# Show inventory button 
+		if inventory_button:
+			print(f"{'[ Press (i) for Inventory ]':>70}")
+		
+		user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
+
+		if user_interact_attempt in ["i", "inv", "inventory"] and inventory_button:
+			player.checkInventory()
+			input("Press enter to continue...")
+		else:
+		   valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
+
+		# Unlock inventory button 
+		if not valid_room_interaction:
+				print("Not a valid interaction.")
+				input("Press enter to continue...")
+
+		# --- Logic between interactions --- #
+
+		# Check if the room can be exited
+		if current_room.attemptExit():
+			if room_index < len(rooms) - 1:
+				print(f"\nWith all clues found, you find a way out of the {current_room.name}...")
+				room_index += 1
+				current_room = rooms[room_index]
+				input("Press enter to enter the next room...")
+			
+		
+	   # Update time and check game state
+		turnTime = time.time() - startTurn # 'decision time' on top of interaction time
+		player.modTime(-turnTime)# Decrease time per interaction
+		if player.checkGameState(allChallenges):
+			break # end the game
+
+
+gameLoop()

@@ -1,0 +1,7 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+*.pyc
+__pycache__/
+addons/py4godot/cpython*
+*.import
