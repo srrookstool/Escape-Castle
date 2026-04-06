@@ -28,10 +28,10 @@ tracks/0/path = NodePath("../glow:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(-0.033333335, 0, 0.033333335),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.033333335),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_7dxh1"]
@@ -58,12 +58,13 @@ _data = {
 }
 
 [node name="SpookyForestTitle" type="Sprite2D" unique_id=1711716392]
-position = Vector2(574, 330)
+position = Vector2(583, 327)
 scale = Vector2(0.74869794, 0.6347656)
 texture = ExtResource("1_qi0vt")
 script = ExtResource("2_ud16e")
 
 [node name="startbutton" type="Button" parent="." unique_id=99906558]
+z_index = 1
 offset_left = -197.67651
 offset_top = 187.47076
 offset_right = 156.2713
@@ -72,15 +73,12 @@ flat = true
 
 [node name="GlowAnimator" type="AnimationPlayer" parent="startbutton" unique_id=762894892]
 libraries/ = SubResource("AnimationLibrary_jsqps")
-playback_auto_capture = false
 
 [node name="glow" type="TextureRect" parent="." unique_id=1891923440]
-z_index = 1
-offset_left = -197.67653
-offset_top = 182.7446
+offset_left = -196.3409
+offset_top = 176.44308
 offset_right = 156.27129
-offset_bottom = 283.56924
-mouse_filter = 2
+offset_bottom = 280.41843
 texture = ExtResource("3_tnfeh")
 
 [connection signal="mouse_entered" from="startbutton" to="." method="_on_startbutton_mouse_entered"]

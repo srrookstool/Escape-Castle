@@ -1,26 +1,235 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvhxqbh8siark"]
+[gd_scene format=3 uid="uid://cvhxqbh8siark"]
 
 [ext_resource type="Texture2D" uid="uid://3ejp6g5f7aci" path="res://Medieval foyer witho.png" id="1_liwtu"]
+[ext_resource type="Script" uid="uid://c0vrl84pa2ghl" path="res://foyerscript.gd" id="2_8yswt"]
+[ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_xp42y"]
+[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_onj73"]
 
-[node name="MedievalFoyerWitho" type="Sprite2D"]
+[sub_resource type="Animation" id="Animation_tnfeh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../glowL:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../glowC:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_jsqps"]
+resource_name = "hover_off"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1b7je"]
+resource_name = "hover_offC"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowL:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5fnjs"]
+resource_name = "hover_offL"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowC:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7dxh1"]
+resource_name = "hover_on"
+length = 0.26666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_onj73"]
+resource_name = "hover_onC"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowL:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_eek51"]
+resource_name = "hover_onL"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowC:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_onj73"]
+_data = {
+&"RESET": SubResource("Animation_tnfeh"),
+&"hover_off": SubResource("Animation_jsqps"),
+&"hover_offC": SubResource("Animation_1b7je"),
+&"hover_offL": SubResource("Animation_5fnjs"),
+&"hover_on": SubResource("Animation_7dxh1"),
+&"hover_onC": SubResource("Animation_onj73"),
+&"hover_onL": SubResource("Animation_eek51")
+}
+
+[node name="foyer" type="Sprite2D" unique_id=153628087]
 position = Vector2(576.5, 322)
 scale = Vector2(0.750651, 0.6347656)
 texture = ExtResource("1_liwtu")
+script = ExtResource("2_8yswt")
 
-[node name="brokenframe" type="Button" parent="."]
+[node name="brokenframe" type="Button" parent="." unique_id=1708574383]
+z_index = 1
 offset_left = 420.0
 offset_top = -123.0
 offset_right = 550.0
 offset_bottom = -24.0
+flat = true
 
-[node name="large chest" type="Button" parent="."]
+[node name="GlowAnimatorF" type="AnimationPlayer" parent="brokenframe" unique_id=7687514]
+libraries/ = SubResource("AnimationLibrary_onj73")
+playback_auto_capture = false
+
+[node name="large chest" type="Button" parent="." unique_id=1978439714]
+z_index = 1
 offset_left = 136.0
 offset_top = 97.0
 offset_right = 309.0
 offset_bottom = 188.0
+flat = true
 
-[node name="clock" type="Button" parent="."]
+[node name="GlowAnimatorL" type="AnimationPlayer" parent="large chest" unique_id=731362009]
+libraries/ = SubResource("AnimationLibrary_onj73")
+playback_auto_capture = false
+
+[node name="clock" type="Button" parent="." unique_id=1931482772]
+z_index = 1
 offset_left = -69.0
 offset_top = -384.0
 offset_right = 42.0
 offset_bottom = -97.0
+flat = true
+
+[node name="GlowAnimatorC" type="AnimationPlayer" parent="clock" unique_id=206262326]
+libraries/ = SubResource("AnimationLibrary_onj73")
+playback_auto_capture = false
+
+[node name="Dialogue" parent="." unique_id=116413520 instance=ExtResource("2_xp42y")]
+offset_left = -588.1562
+offset_top = 111.8523
+offset_right = 185.84381
+offset_bottom = 485.57837
+
+[node name="glowC" type="TextureRect" parent="." unique_id=1397571542]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -65.942764
+offset_top = -387.54462
+offset_right = 36.634872
+offset_bottom = -100.824646
+mouse_filter = 2
+texture = ExtResource("4_onj73")
+
+[node name="glowL" type="TextureRect" parent="." unique_id=484991371]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = 143.20901
+offset_top = 96.098434
+offset_right = 288.4163
+offset_bottom = 176.4431
+mouse_filter = 2
+texture = ExtResource("4_onj73")
+
+[node name="glowF" type="TextureRect" parent="." unique_id=69697906]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = 429.62708
+offset_top = -116.57846
+offset_right = 533.5369
+offset_bottom = -31.50766
+mouse_filter = 2
+texture = ExtResource("4_onj73")
+
+[connection signal="mouse_entered" from="brokenframe" to="." method="_on_brokenframe_mouse_entered"]
+[connection signal="mouse_exited" from="brokenframe" to="." method="_on_brokenframe_mouse_exited"]
+[connection signal="pressed" from="brokenframe" to="." method="_on_brokenframe_pressed"]
+[connection signal="mouse_entered" from="large chest" to="." method="_on_large_chest_mouse_entered"]
+[connection signal="mouse_exited" from="large chest" to="." method="_on_large_chest_mouse_exited"]
+[connection signal="pressed" from="large chest" to="." method="_on_large_chest_pressed"]
+[connection signal="mouse_entered" from="clock" to="." method="_on_clock_mouse_entered"]
+[connection signal="mouse_exited" from="clock" to="." method="_on_clock_mouse_exited"]
+[connection signal="pressed" from="clock" to="." method="_on_clock_pressed"]

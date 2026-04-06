@@ -3,13 +3,19 @@ extends Sprite2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	$glow.modulate = Color(1, 1, 1, 0)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 
 func _on_startbutton_pressed() -> void:
 	get_tree().change_scene_to_file("res://escapecastleMain.tscn")
+
+
+func _on_startbutton_mouse_entered() -> void:
+	$startbutton/GlowAnimator.play("hover_on")
+
+
+
+func _on_startbutton_mouse_exited() -> void:
+	$startbutton/GlowAnimator.play("hover_off")
