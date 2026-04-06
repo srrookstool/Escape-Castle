@@ -22,6 +22,11 @@ If the player succeeds, they escape. If not, they join the missing friends in th
 6. Escape before time runs out  
 
 ---
+# Downloads Required:
+- Visual Studio Code
+- Godot Version 4.5 or higher
+- Python for Godot installed
+---
 
 ## Key Mechanics
 - **Timer:** 30–60 minutes  
