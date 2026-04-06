@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://bwj2sk0mdickh"]
+
+[ext_resource type="Texture2D" uid="uid://ddoocktnig0yi" path="res://Spooky forest title .png" id="1_qi0vt"]
+[ext_resource type="Script" uid="uid://xoish31iwpog" path="res://startscreen_main.gd" id="2_ud16e"]
+[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="3_tnfeh"]
+
+[sub_resource type="Animation" id="Animation_tnfeh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glow:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_jsqps"]
+resource_name = "hover_off"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glow:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7dxh1"]
+resource_name = "hover_on"
+length = 0.26666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glow:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jsqps"]
+_data = {
+&"RESET": SubResource("Animation_tnfeh"),
+&"hover_off": SubResource("Animation_jsqps"),
+&"hover_on": SubResource("Animation_7dxh1")
+}
+
+[node name="SpookyForestTitle" type="Sprite2D" unique_id=1711716392]
+position = Vector2(583, 327)
+scale = Vector2(0.74869794, 0.6347656)
+texture = ExtResource("1_qi0vt")
+script = ExtResource("2_ud16e")
+
+[node name="startbutton" type="Button" parent="." unique_id=99906558]
+z_index = 1
+offset_left = -197.67651
+offset_top = 187.47076
+offset_right = 156.2713
+offset_bottom = 278.84308
+flat = true
+
+[node name="GlowAnimator" type="AnimationPlayer" parent="startbutton" unique_id=762894892]
+libraries/ = SubResource("AnimationLibrary_jsqps")
+
+[node name="glow" type="TextureRect" parent="." unique_id=1891923440]
+offset_left = -196.3409
+offset_top = 176.44308
+offset_right = 156.27129
+offset_bottom = 280.41843
+texture = ExtResource("3_tnfeh")
+
+[connection signal="mouse_entered" from="startbutton" to="." method="_on_startbutton_mouse_entered"]
+[connection signal="mouse_exited" from="startbutton" to="." method="_on_startbutton_mouse_exited"]
+[connection signal="pressed" from="startbutton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="startbutton" to="." method="_on_startbutton_pressed"]

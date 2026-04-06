@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://1p1nc4jfq6v2"]
+
+[ext_resource type="Texture2D" uid="uid://642wml2nxjbn" path="res://Refined haunted libr.png" id="1_2cia1"]
+[ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_iuo7c"]
+[ext_resource type="Script" uid="uid://ig5sbk5lavum" path="res://libraryscript.gd" id="2_olk84"]
+
+[node name="library" type="Sprite2D"]
+position = Vector2(576, 322.5)
+scale = Vector2(0.74869794, 0.62597656)
+texture = ExtResource("1_2cia1")
+script = ExtResource("2_olk84")
+
+[node name="romeoandjuliet" type="Button" parent="."]
+offset_left = -390.01044
+offset_top = -250.00934
+offset_right = -364.63306
+offset_bottom = -178.12167
+flat = true
+
+[node name="sherlock" type="Button" parent="."]
+offset_left = -104.18091
+offset_top = -257.9969
+offset_right = -49.433044
+offset_bottom = -189.30423
+flat = true
+
+[node name="gatsby" type="Button" parent="."]
+offset_left = -384.66782
+offset_top = -95.05148
+offset_right = -339.26956
+offset_bottom = -27.14508
+flat = true
+
+[node name="desk" type="Button" parent="."]
+offset_left = -311.20697
+offset_top = 82.27144
+offset_right = 327.2348
+offset_bottom = 224.44934
+flat = true
+
+[node name="frame" type="Button" parent="."]
+offset_left = 134.90091
+offset_top = -283.55695
+offset_right = 307.18613
+offset_bottom = -132.58032
+flat = true
+
+[node name="Dialogue" parent="." instance=ExtResource("2_iuo7c")]
+offset_left = -702.55304
+offset_top = 128.59906
+offset_right = 71.44696
+offset_bottom = 497.59906
+
+[connection signal="pressed" from="romeoandjuliet" to="." method="_on_romeoandjuliet_pressed"]
+[connection signal="pressed" from="sherlock" to="." method="_on_sherlock_pressed"]
+[connection signal="pressed" from="gatsby" to="." method="_on_gatsby_pressed"]
+[connection signal="pressed" from="desk" to="." method="_on_desk_pressed"]
+[connection signal="pressed" from="frame" to="." method="_on_frame_pressed"]

@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://djlu3jjveq55g"]
+
+[ext_resource type="Texture2D" uid="uid://vegojdbbspmm" path="res://Haunted ballroom wit.png" id="1_ka2bo"]
+[ext_resource type="Script" uid="uid://8yhfwxcii4c2" path="res://ballroomscript.gd" id="2_i0fru"]
+[ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_oc5d6"]
+
+[node name="ballroom" type="Sprite2D"]
+position = Vector2(575, 323.00003)
+scale = Vector2(0.74869794, 0.63183594)
+texture = ExtResource("1_ka2bo")
+script = ExtResource("2_i0fru")
+
+[node name="piano" type="Button" parent="."]
+offset_left = -751.97217
+offset_top = -99.70949
+offset_right = -309.87134
+offset_bottom = 106.83153
+flat = true
+
+[node name="frames" type="Button" parent="."]
+offset_left = 138.9078
+offset_top = 193.08804
+offset_right = 591.69385
+offset_bottom = 376.67993
+flat = true
+
+[node name="note" type="Button" parent="."]
+offset_left = -150.9287
+offset_top = 243.73407
+offset_right = -28.062607
+offset_bottom = 307.12827
+flat = true
+
+[node name="Dialogue" parent="." instance=ExtResource("2_oc5d6")]
+offset_left = -45.41217
+offset_top = -522.2875
+offset_right = 728.5878
+offset_bottom = -153.28748
+
+[connection signal="pressed" from="piano" to="." method="_on_piano_pressed"]
+[connection signal="pressed" from="frames" to="." method="_on_frames_pressed"]
+[connection signal="pressed" from="note" to="." method="_on_note_pressed"]
