@@ -17,3 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="Escape the Medvial Castle"
 run/main_scene="uid://bwj2sk0mdickh"
 config/features=PackedStringArray("4.6", "Forward Plus")
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/py4godot/plugin.cfg")

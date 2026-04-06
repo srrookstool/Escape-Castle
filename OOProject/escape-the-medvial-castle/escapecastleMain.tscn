@@ -207,10 +207,10 @@ texture = ExtResource("4_onj73")
 [node name="glowL" type="TextureRect" parent="." unique_id=484991371]
 modulate = Color(1, 1, 1, 0)
 z_index = 1
-offset_left = 143.20901
-offset_top = 96.098434
-offset_right = 288.4163
-offset_bottom = 176.4431
+offset_left = 151.20206
+offset_top = 92.94774
+offset_right = 301.73807
+offset_bottom = 178.01848
 mouse_filter = 2
 texture = ExtResource("4_onj73")
 

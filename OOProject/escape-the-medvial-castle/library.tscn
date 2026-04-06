@@ -1,58 +1,394 @@
-[gd_scene load_steps=4 format=3 uid="uid://1p1nc4jfq6v2"]
+[gd_scene format=3 uid="uid://1p1nc4jfq6v2"]
 
 [ext_resource type="Texture2D" uid="uid://642wml2nxjbn" path="res://Refined haunted libr.png" id="1_2cia1"]
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_iuo7c"]
 [ext_resource type="Script" uid="uid://ig5sbk5lavum" path="res://libraryscript.gd" id="2_olk84"]
+[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_x5gbn"]
 
-[node name="library" type="Sprite2D"]
+[sub_resource type="Animation" id="Animation_x5gbn"]
+length = 0.16666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowR:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2jcn1"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowR:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0nmpb"]
+resource_name = "hover_onR"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowR:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xna2n"]
+_data = {
+&"RESET": SubResource("Animation_x5gbn"),
+&"hover_offR": SubResource("Animation_2jcn1"),
+&"hover_onR": SubResource("Animation_0nmpb")
+}
+
+[sub_resource type="Animation" id="Animation_xna2n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowS:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5vx0l"]
+resource_name = "hover_offS"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowS:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lp2kx"]
+resource_name = "hover_onS"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowS:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3i1dk"]
+_data = {
+&"RESET": SubResource("Animation_xna2n"),
+&"hover_offS": SubResource("Animation_5vx0l"),
+&"hover_onS": SubResource("Animation_lp2kx")
+}
+
+[sub_resource type="Animation" id="Animation_3i1dk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowG:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0yaae"]
+resource_name = "hover_offG"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowG:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5s64j"]
+resource_name = "hover_onG"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowG:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_che3i"]
+_data = {
+&"RESET": SubResource("Animation_3i1dk"),
+&"hover_offG": SubResource("Animation_0yaae"),
+&"hover_onG": SubResource("Animation_5s64j")
+}
+
+[sub_resource type="Animation" id="Animation_che3i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowD:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_jhml4"]
+resource_name = "hover_offD"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowD:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_w1012"]
+resource_name = "hover_onD"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowD:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qgwnr"]
+_data = {
+&"RESET": SubResource("Animation_che3i"),
+&"hover_offD": SubResource("Animation_jhml4"),
+&"hover_onD": SubResource("Animation_w1012")
+}
+
+[sub_resource type="Animation" id="Animation_qgwnr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7wj6x"]
+resource_name = "hover_offF"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1763h"]
+resource_name = "hover_onF"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowF:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_evjuo"]
+_data = {
+&"RESET": SubResource("Animation_qgwnr"),
+&"hover_offF": SubResource("Animation_7wj6x"),
+&"hover_onF": SubResource("Animation_1763h")
+}
+
+[node name="library" type="Sprite2D" unique_id=1224428417]
 position = Vector2(576, 322.5)
 scale = Vector2(0.74869794, 0.62597656)
 texture = ExtResource("1_2cia1")
 script = ExtResource("2_olk84")
 
-[node name="romeoandjuliet" type="Button" parent="."]
+[node name="romeoandjuliet" type="Button" parent="." unique_id=770901305]
 offset_left = -390.01044
 offset_top = -250.00934
 offset_right = -364.63306
 offset_bottom = -178.12167
 flat = true
 
-[node name="sherlock" type="Button" parent="."]
+[node name="AnimationPlayerR" type="AnimationPlayer" parent="romeoandjuliet" unique_id=1481671327]
+libraries/ = SubResource("AnimationLibrary_xna2n")
+
+[node name="sherlock" type="Button" parent="." unique_id=1092139128]
 offset_left = -104.18091
 offset_top = -257.9969
 offset_right = -49.433044
 offset_bottom = -189.30423
 flat = true
 
-[node name="gatsby" type="Button" parent="."]
+[node name="AnimationPlayerS" type="AnimationPlayer" parent="sherlock" unique_id=954354584]
+libraries/ = SubResource("AnimationLibrary_3i1dk")
+
+[node name="gatsby" type="Button" parent="." unique_id=509498133]
 offset_left = -384.66782
 offset_top = -95.05148
 offset_right = -339.26956
 offset_bottom = -27.14508
 flat = true
 
-[node name="desk" type="Button" parent="."]
+[node name="AnimationPlayerG" type="AnimationPlayer" parent="gatsby" unique_id=852919972]
+libraries/ = SubResource("AnimationLibrary_che3i")
+
+[node name="desk" type="Button" parent="." unique_id=1074957838]
 offset_left = -311.20697
 offset_top = 82.27144
 offset_right = 327.2348
 offset_bottom = 224.44934
 flat = true
 
-[node name="frame" type="Button" parent="."]
+[node name="AnimationPlayerD" type="AnimationPlayer" parent="desk" unique_id=858347426]
+libraries/ = SubResource("AnimationLibrary_qgwnr")
+
+[node name="frame" type="Button" parent="." unique_id=1088744684]
 offset_left = 134.90091
 offset_top = -283.55695
 offset_right = 307.18613
 offset_bottom = -132.58032
 flat = true
 
-[node name="Dialogue" parent="." instance=ExtResource("2_iuo7c")]
-offset_left = -702.55304
-offset_top = 128.59906
-offset_right = 71.44696
-offset_bottom = 497.59906
+[node name="AnimationPlayerF" type="AnimationPlayer" parent="frame" unique_id=1056465466]
+libraries/ = SubResource("AnimationLibrary_evjuo")
 
+[node name="Dialogue" parent="." unique_id=1440113975 instance=ExtResource("2_iuo7c")]
+offset_left = -729.2661
+offset_top = 120.61157
+offset_right = 49.41919
+offset_bottom = 491.20905
+
+[node name="glowR" type="TextureRect" parent="." unique_id=1153470651]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -406.03827
+offset_top = -261.1919
+offset_right = -349.9409
+offset_bottom = -160.36725
+mouse_filter = 2
+texture = ExtResource("4_x5gbn")
+
+[node name="glowS" type="TextureRect" parent="." unique_id=1832951427]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -128.22258
+offset_top = -269.1794
+offset_right = -44.076523
+offset_bottom = -168.35477
+mouse_filter = 2
+texture = ExtResource("4_x5gbn")
+
+[node name="glowG" type="TextureRect" parent="." unique_id=1479552837]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -384.66785
+offset_top = -119.01404
+offset_right = -317.8852
+offset_bottom = -18.189392
+mouse_filter = 2
+texture = ExtResource("4_x5gbn")
+
+[node name="glowD" type="TextureRect" parent="." unique_id=1624975413]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -305.86435
+offset_top = 80.67395
+offset_right = 336.58426
+offset_bottom = 175.10858
+mouse_filter = 2
+texture = ExtResource("4_x5gbn")
+
+[node name="glowF" type="TextureRect" parent="." unique_id=255678529]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = 117.537346
+offset_top = -277.16693
+offset_right = 317.88513
+offset_bottom = -136.40468
+mouse_filter = 2
+texture = ExtResource("4_x5gbn")
+
+[connection signal="mouse_entered" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_entered"]
+[connection signal="mouse_exited" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_exited"]
 [connection signal="pressed" from="romeoandjuliet" to="." method="_on_romeoandjuliet_pressed"]
+[connection signal="mouse_entered" from="sherlock" to="." method="_on_sherlock_mouse_entered"]
+[connection signal="mouse_exited" from="sherlock" to="." method="_on_sherlock_mouse_exited"]
 [connection signal="pressed" from="sherlock" to="." method="_on_sherlock_pressed"]
+[connection signal="mouse_entered" from="gatsby" to="." method="_on_gatsby_mouse_entered"]
+[connection signal="mouse_exited" from="gatsby" to="." method="_on_gatsby_mouse_exited"]
 [connection signal="pressed" from="gatsby" to="." method="_on_gatsby_pressed"]
+[connection signal="mouse_entered" from="desk" to="." method="_on_desk_mouse_entered"]
+[connection signal="mouse_exited" from="desk" to="." method="_on_desk_mouse_exited"]
 [connection signal="pressed" from="desk" to="." method="_on_desk_pressed"]
+[connection signal="mouse_entered" from="frame" to="." method="_on_frame_mouse_entered"]
+[connection signal="mouse_exited" from="frame" to="." method="_on_frame_mouse_exited"]
 [connection signal="pressed" from="frame" to="." method="_on_frame_pressed"]

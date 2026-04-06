@@ -40,3 +40,45 @@ func _on_desk_pressed() -> void:
 
 func _on_frame_pressed() -> void:
 	$Dialogue.show_text("You see a large music note barely hanging on the wall, you go closer to the, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
+	
+	
+#glow animations
+
+func _on_romeoandjuliet_mouse_entered() -> void:
+	$romeoandjuliet/AnimationPlayerR.play("hover_onR")
+
+
+func _on_romeoandjuliet_mouse_exited() -> void:
+	$romeoandjuliet/AnimationPlayerR.play("hover_offR")
+
+
+func _on_sherlock_mouse_entered() -> void:
+	$sherlock/AnimationPlayerS.play("hover_onS")
+
+
+func _on_sherlock_mouse_exited() -> void:
+	$sherlock/AnimationPlayerS.play("hover_offS")
+
+
+func _on_gatsby_mouse_entered() -> void:
+	$gatsby/AnimationPlayerG.play("hover_onG")
+
+
+func _on_gatsby_mouse_exited() -> void:
+	$gatsby/AnimationPlayerG.play("hover_offG")
+
+
+func _on_desk_mouse_entered() -> void:
+	$desk/AnimationPlayerD.play("hover_onD")
+
+
+func _on_desk_mouse_exited() -> void:
+	$desk/AnimationPlayerD.play("hover_offD")
+
+
+func _on_frame_mouse_entered() -> void:
+	$frame/AnimationPlayerF.play("hover_onF")
+
+
+func _on_frame_mouse_exited() -> void:
+	$frame/AnimationPlayerF.play("hover_offF")
