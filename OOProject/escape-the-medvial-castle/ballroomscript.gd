@@ -29,3 +29,26 @@ func _on_note_pressed() -> void:
 	$Dialogue.show_text("You see a small ripped note on the ground, badly worn, 
 	you pick it up and read the numbers on it- it contains two digits - 
 	piece of paper for the final code: {door_code[:2]}.")
+
+
+
+func _on_note_mouse_exited() -> void:
+	$note/AnimationPlayerN.play("hover_offN")
+
+func _on_note_mouse_entered() -> void:
+	$note/AnimationPlayerN.play("hover_onN")
+
+
+func _on_frames_mouse_exited() -> void:
+	$frames/AnimationPlayerF.play("hover_offF")
+
+
+func _on_frames_mouse_entered() -> void:
+	$frames/AnimationPlayerF.play("hover_onF")
+
+
+func _on_piano_mouse_exited() -> void:
+	$piano/AnimationPlayerP.play("hover_offP")
+
+func _on_piano_mouse_entered() -> void:
+	$piano/AnimationPlayerP.play("hover_onP")

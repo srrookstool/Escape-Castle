@@ -82,6 +82,7 @@ offset_right = 156.27129
 offset_bottom = 283.56924
 mouse_filter = 2
 texture = ExtResource("3_tnfeh")
+expand_mode = 1
 
 [connection signal="mouse_entered" from="startbutton" to="." method="_on_startbutton_mouse_entered"]
 [connection signal="mouse_exited" from="startbutton" to="." method="_on_startbutton_mouse_exited"]

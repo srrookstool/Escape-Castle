@@ -1,42 +1,244 @@
-[gd_scene load_steps=4 format=3 uid="uid://0l5rnsdhak4c"]
+[gd_scene format=3 uid="uid://0l5rnsdhak4c"]
 
 [ext_resource type="Texture2D" uid="uid://b0633mbrxbw51" path="res://Dungeon scene with n.png" id="1_ijnbl"]
 [ext_resource type="Script" uid="uid://4r2l7gyktlf1" path="res://finalroomscript.gd" id="2_0tn68"]
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_60omb"]
+[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_oxswj"]
 
-[node name="Dungeon" type="Sprite2D"]
-position = Vector2(633, 322)
+[sub_resource type="Animation" id="Animation_oxswj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowB:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_8maq4"]
+resource_name = "hover_offB"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowB:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_27mpd"]
+resource_name = "hover_onB"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowB:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u4sit"]
+_data = {
+&"RESET": SubResource("Animation_oxswj"),
+&"hover_offB": SubResource("Animation_8maq4"),
+&"hover_onB": SubResource("Animation_27mpd")
+}
+
+[sub_resource type="Animation" id="Animation_dhxmg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowT:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ll43n"]
+resource_name = "hover_offT"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowT:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vf768"]
+resource_name = "hover_onT"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowT:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yjama"]
+_data = {
+&"RESET": SubResource("Animation_dhxmg"),
+&"hover_offT": SubResource("Animation_ll43n"),
+&"hover_onT": SubResource("Animation_vf768")
+}
+
+[sub_resource type="Animation" id="Animation_u4sit"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowC:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_syo33"]
+resource_name = "hover_offC"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowC:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_mbwxy"]
+resource_name = "hover_onC"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../glowC:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d4e7b"]
+_data = {
+&"RESET": SubResource("Animation_u4sit"),
+&"hover_offC": SubResource("Animation_syo33"),
+&"hover_onC": SubResource("Animation_mbwxy")
+}
+
+[node name="Dungeon" type="Sprite2D" unique_id=911298885]
+position = Vector2(573, 330)
 scale = Vector2(0.7467448, 0.6357422)
 texture = ExtResource("1_ijnbl")
 script = ExtResource("2_0tn68")
 
-[node name="bench" type="Button" parent="."]
+[node name="Dialogue" parent="." unique_id=1943121858 instance=ExtResource("2_60omb")]
+offset_left = 26.782898
+offset_top = 128.9831
+offset_right = 800.7829
+offset_bottom = 497.9831
+
+[node name="bench" type="Button" parent="." unique_id=1180621996]
 offset_left = -692.33826
 offset_top = 55.053745
 offset_right = -348.17786
 offset_bottom = 226.50687
 flat = true
 
-[node name="table" type="Button" parent="."]
+[node name="AnimationPlayerB" type="AnimationPlayer" parent="bench" unique_id=1146991275]
+libraries/ = SubResource("AnimationLibrary_u4sit")
+
+[node name="table" type="Button" parent="." unique_id=498496597]
 offset_left = -223.63731
 offset_top = 84.94008
 offset_right = 121.86226
 offset_bottom = 213.92317
 flat = true
 
-[node name="cellar" type="Button" parent="."]
-offset_left = 155.34087
+[node name="AnimationPlayerT" type="AnimationPlayer" parent="table" unique_id=235428047]
+libraries/ = SubResource("AnimationLibrary_yjama")
+
+[node name="cellar" type="Button" parent="." unique_id=1563342568]
+offset_left = 156.68004
 offset_top = -185.60982
 offset_right = 608.64154
 offset_bottom = 180.89098
 flat = true
 
-[node name="Dialogue" parent="." instance=ExtResource("2_60omb")]
-offset_left = 26.782885
-offset_top = 128.98311
-offset_right = 800.7829
-offset_bottom = 497.9831
+[node name="AnimationPlayerC" type="AnimationPlayer" parent="cellar" unique_id=1203010900]
+libraries/ = SubResource("AnimationLibrary_d4e7b")
 
+[node name="glowC" type="TextureRect" parent="." unique_id=1215920116]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = 196.85445
+offset_top = -91.23195
+offset_right = 599.9372
+offset_bottom = 144.71275
+mouse_filter = 2
+texture = ExtResource("4_oxswj")
+
+[node name="glowT" type="TextureRect" parent="." unique_id=839982138]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -176.76724
+offset_top = 81.79419
+offset_right = 100.43588
+offset_bottom = 196.6206
+mouse_filter = 2
+texture = ExtResource("4_oxswj")
+
+[node name="glowB" type="TextureRect" parent="." unique_id=1615324695]
+modulate = Color(1, 1, 1, 0)
+z_index = 1
+offset_left = -701.7122
+offset_top = 48.761887
+offset_right = -395.04797
+offset_bottom = 223.36101
+mouse_filter = 2
+texture = ExtResource("4_oxswj")
+
+[connection signal="mouse_entered" from="bench" to="." method="_on_bench_mouse_entered"]
+[connection signal="mouse_exited" from="bench" to="." method="_on_bench_mouse_exited"]
 [connection signal="pressed" from="bench" to="." method="_on_bench_pressed"]
+[connection signal="mouse_entered" from="table" to="." method="_on_table_mouse_entered"]
+[connection signal="mouse_exited" from="table" to="." method="_on_table_mouse_exited"]
 [connection signal="pressed" from="table" to="." method="_on_table_pressed"]
+[connection signal="mouse_entered" from="cellar" to="." method="_on_cellar_mouse_entered"]
+[connection signal="mouse_exited" from="cellar" to="." method="_on_cellar_mouse_exited"]
 [connection signal="pressed" from="cellar" to="." method="_on_cellar_pressed"]
