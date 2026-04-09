@@ -572,7 +572,7 @@ dungeon.objects.append(finaldoor)
 #CREATE CHALLENGES AND CONNECTION TO PUZZLES,OBJECTS,ROOMS
 foyerChallenge = Challenge(
     "Clock Challenge",
-    "... put the clock back at the correct time...",
+    "as you get near the clock it strikes a chilling midnight...put the clock back at the correct time...",
     "A large oak grandfather clock opens at the top of the grand staircase — you enter."
 )
 foyerChallenge.puzzle = clockCH
