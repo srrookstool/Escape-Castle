@@ -35,7 +35,7 @@ If the player succeeds, they escape. If not, they join the missing friends in th
 - **4 rooms:** Foyer → Library → Grand Ballroom → Dungeon  
 - **3 clues per room**  
 - **Music‑note mini‑challenge in every room**  
-- **Final code solution:** 1650  
+- **Final code solution:** Randomized
 - **Inventory system:** Player can view items at any time  
 - **Locked doors:** Play sound until all clues/puzzles are completed  
 - **Room progression:** Player can only backtrack starting in Room 3  
@@ -96,8 +96,8 @@ If the player succeeds, they escape. If not, they join the missing friends in th
 
 **Examples**
 - Clock puzzle  
-- Music note puzzle (C‑A‑G‑E)  
-- Final lock (1650)  
+- Music note puzzle
+- Final lock  
 
 ---
 
@@ -140,7 +140,7 @@ A grand staircase, fountain, fireplace, chess table, and a hidden pendulum clock
 The only light comes from the magically lit fireplace.
 
 **Clues & Objects**
-- Large chest → contains half‑ripped note (“50”)  
+- Large chest → contains half‑ripped note 
 - Music note picture: **G**  
 - Grandfather clock puzzle  
 
@@ -173,7 +173,7 @@ Dusty tables and massive windows create a haunting atmosphere.
 **Clues & Objects**
 - Two dusty miniature paintings → reveal notes **C** and **E**  
 - Grand piano  
-- Half‑ripped note (“16”)  
+- Half‑ripped note
 
 **Challenge:**  
 A music‑note memory puzzle.  
@@ -191,8 +191,7 @@ Low visibility, barred windows, cobwebs, and a final locked exit.
 **Clues & Objects**
 - Prison bench  
 - Covered object → reveals item needed to reach final door  
-- Final door code: **1650**  
-
+- Final door code: randomized based on previous half-ripped notes
 **Randomized Objects**
 - **Hand mirror:** +5 minutes  
 - **Vintage throne:** 50/50 chance  
