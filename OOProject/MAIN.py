@@ -369,6 +369,11 @@ class Room():
 
 
     def userInteract(self, player, attempt):
+        """Handles user interaction with objects in the room.
+        
+        Returns (target_obj, move_forward)
+        """
+        
         target_obj = None
         for obj in self.objects:
             if (
@@ -380,7 +385,7 @@ class Room():
                 break
 
         if not target_obj:
-            return False # no valid interaction
+            return False, False # no valid interaction
 
         # Examine the object once
         target_obj.examine(player)
@@ -397,13 +402,16 @@ class Room():
             if not self.allObjectsExamined():
                 print("\nYou feel like you haven't examined everything yet...")
                 input("Press ENTER to continue...")
-                return target_obj
+                return target_obj, False
 
             # All objects examined → start challenge
             if self.challenges and not self.challenges[0].isCompleted:
                 self.challenges[0].startChallenge(player)
+            
+            if self.challenges[0].isCompleted:
+                return target_obj, True
 
-        return target_obj # no valid interaction
+        return target_obj, False # no valid interaction
     
 
     def allObjectsExamined(self):
@@ -619,6 +627,8 @@ finaldoor.answer = door_code #order matters, based on the notes found in the roo
 # main game loop
 def gameLoop():
     global inventory_button
+    can_move_backwards = True
+    
     printTitle()
 
     name = input("Enter your name: ").lower().replace(" ", "")
@@ -626,6 +636,7 @@ def gameLoop():
 
 
     rooms=[foyer, library, ballroom, dungeon]
+    solved = [False] * len(rooms)
     room_index = 0
     current_room = rooms[room_index]
     
@@ -653,14 +664,21 @@ def gameLoop():
         # Show inventory button 
         if inventory_button:
             print(f"{'[ Press (i) for Inventory ]':>70}")
+        if can_move_backwards and room_index > 0:
+            print("[ Press (z) to go back ]".rjust(70))
         
         user_interact_attempt = input("\nWhat do you pick..... ").lower().strip()
 
+        move_room = 0
         if user_interact_attempt in ["i", "inv", "inventory"] and inventory_button:
             player.checkInventory()
             input("Press enter to continue...")
+        elif user_interact_attempt in ['z', "back", "return"] and can_move_backwards and room_index > 0:
+            move_room = -1
         else:
-           valid_room_interaction = current_room.userInteract(player, user_interact_attempt)
+           valid_room_interaction, move_forward = current_room.userInteract(player, user_interact_attempt)
+           if move_forward:
+               move_room = 1
 
         # Unlock inventory button 
         if not valid_room_interaction:
@@ -670,12 +688,22 @@ def gameLoop():
         # --- Logic between interactions --- #
 
         # Check if the room can be exited
-        if current_room.attemptExit():
-            if room_index < len(rooms) - 1:
-                print(f"\nWith all clues found, you find a way out of the {current_room.name}...")
+        if move_room != 0:
+            if move_room == 1 and room_index < len(rooms) - 1:
+                if not solved[room_index]:
+                    print(f"\nWith all clues found, you find a way out of the {current_room.name}...")
+                    solved[room_index] = True
+                
                 room_index += 1
                 current_room = rooms[room_index]
                 input("Press enter to enter the next room...")
+                
+                if room_index == len(rooms) - 1: # unlock backtracking if in final room
+                    can_move_backwards = True
+            elif move_room == -1 and room_index > 0:
+                room_index -= 1
+                current_room = rooms[room_index]
+                input("Press enter to enter the previous room...")
             
         
        # Update time and check game state
