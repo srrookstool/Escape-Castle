@@ -18,6 +18,10 @@ config/name="Escape the Medvial Castle"
 run/main_scene="uid://bwj2sk0mdickh"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
+[dotnet]
+
+project/assembly_name="Escape the Medvial Castle"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/py4godot/plugin.cfg")
