@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cwcy586ror3i8"]
+
+[ext_resource type="Script" uid="uid://2amsm4g5btfq" path="res://Challenge.gd" id="1_ghks4"]
+
+[node name="Challenge" type="CanvasLayer" unique_id=926947470]
+script = ExtResource("1_ghks4")
+
+[node name="Panel" type="Panel" parent="." unique_id=689115867]
+offset_left = 120.0
+offset_top = 51.0
+offset_right = 1091.0
+offset_bottom = 598.0
+
+[node name="prompt" type="Label" parent="Panel" unique_id=2119157230]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 33.0
+offset_right = 856.0
+offset_bottom = 179.0
+
+[node name="input" type="LineEdit" parent="Panel" unique_id=2106909371]
+layout_mode = 0
+offset_left = 290.0
+offset_top = 283.0
+offset_right = 674.5
+offset_bottom = 354.0
+
+[node name="submit" type="Button" parent="Panel" unique_id=272281829]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 391.0
+offset_right = 655.0
+offset_bottom = 504.0
+
+[connection signal="pressed" from="Panel/submit" to="." method="_on_submit_pressed"]

@@ -18,9 +18,19 @@ config/name="Escape the Medvial Castle"
 run/main_scene="uid://bwj2sk0mdickh"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
+[autoload]
+
+Gamestate="*uid://dsaei3gc331ab"
+Challenge="*uid://2amsm4g5btfq"
+RoomManager="*uid://dk1k58hc0g54c"
+
 [dotnet]
 
 project/assembly_name="Escape the Medvial Castle"
+
+[editor]
+
+version_control/autoload_on_startup=true
 
 [editor_plugins]
 

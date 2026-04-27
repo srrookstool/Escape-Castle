@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://c0vrl84pa2ghl" path="res://foyerscript.gd" id="2_8yswt"]
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_xp42y"]
 [ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_onj73"]
+[ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_1b7je"]
+[ext_resource type="Texture2D" uid="uid://bqfnfhkqsbxuc" path="res://inventorybutton.png" id="6_eek51"]
 
 [sub_resource type="Animation" id="Animation_tnfeh"]
 length = 0.001
@@ -226,6 +228,18 @@ offset_bottom = -31.50766
 mouse_filter = 2
 texture = ExtResource("4_onj73")
 
+[node name="RoomManager" type="Node" parent="." unique_id=1489975593]
+script = ExtResource("5_1b7je")
+
+[node name="Inventory" type="Button" parent="." unique_id=181518878]
+offset_left = -741.3565
+offset_top = -488.3692
+offset_right = -428.3565
+offset_bottom = -174.3692
+scale = Vector2(0.6, 0.6)
+icon = ExtResource("6_eek51")
+flat = true
+
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
 [connection signal="mouse_entered" from="brokenframe" to="." method="_on_brokenframe_mouse_entered"]
 [connection signal="mouse_exited" from="brokenframe" to="." method="_on_brokenframe_mouse_exited"]
@@ -236,3 +250,4 @@ texture = ExtResource("4_onj73")
 [connection signal="mouse_entered" from="clock" to="." method="_on_clock_mouse_entered"]
 [connection signal="mouse_exited" from="clock" to="." method="_on_clock_mouse_exited"]
 [connection signal="pressed" from="clock" to="." method="_on_clock_pressed"]
+[connection signal="pressed" from="Inventory" to="." method="_on_inventory_pressed"]

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_iuo7c"]
 [ext_resource type="Script" uid="uid://ig5sbk5lavum" path="res://libraryscript.gd" id="2_olk84"]
 [ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_x5gbn"]
+[ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_2jcn1"]
 
 [sub_resource type="Animation" id="Animation_x5gbn"]
 length = 0.16666667
@@ -376,6 +377,9 @@ offset_right = 317.88513
 offset_bottom = -136.40468
 mouse_filter = 2
 texture = ExtResource("4_x5gbn")
+
+[node name="RoomManager" type="Node" parent="." unique_id=1207738610]
+script = ExtResource("5_2jcn1")
 
 [connection signal="mouse_entered" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_entered"]
 [connection signal="mouse_exited" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_exited"]

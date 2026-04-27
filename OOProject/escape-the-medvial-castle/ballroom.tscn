@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://8yhfwxcii4c2" path="res://ballroomscript.gd" id="2_i0fru"]
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_oc5d6"]
 [ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_sk6ro"]
+[ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_6qvh4"]
 
 [sub_resource type="Animation" id="Animation_6qvh4"]
 length = 0.001
@@ -232,6 +233,9 @@ offset_right = -304.52866
 offset_bottom = 104.45746
 mouse_filter = 2
 texture = ExtResource("4_sk6ro")
+
+[node name="RoomManager" type="Node" parent="." unique_id=419901113]
+script = ExtResource("5_6qvh4")
 
 [connection signal="mouse_entered" from="piano" to="." method="_on_piano_mouse_entered"]
 [connection signal="mouse_exited" from="piano" to="." method="_on_piano_mouse_exited"]

@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://1en4tkjsyd54"]
+
+[ext_resource type="Script" uid="uid://sv6dki6wwvn0" path="res://inventory_panel.gd" id="1_qbds2"]
+
+[node name="Control" type="Control" unique_id=672247069]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1157.0
+offset_bottom = 638.0
+script = ExtResource("1_qbds2")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1555249310]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 42.0
+offset_right = 1060.0
+offset_bottom = 584.0
+
+[node name="ItemsLabel" type="Label" parent="." unique_id=942643464]
+layout_mode = 0
+offset_left = 147.0
+offset_top = 55.0
+offset_right = 670.0
+offset_bottom = 126.0
+
+[node name="ItemsVbox" type="VBoxContainer" parent="." unique_id=557739981]
+layout_mode = 0
+offset_left = 134.0
+offset_top = 141.0
+offset_right = 1054.0
+offset_bottom = 371.0
+
+[node name="NotesLabel" type="Label" parent="." unique_id=6755184]
+layout_mode = 0
+offset_left = 141.0
+offset_top = 360.0
+offset_right = 1043.0
+offset_bottom = 429.0
+
+[node name="NotesVbox" type="VBoxContainer" parent="." unique_id=1371493957]
+layout_mode = 0
+offset_left = 152.0
+offset_top = 423.0
+offset_right = 1053.0
+offset_bottom = 569.0
+
+[node name="close" type="Button" parent="." unique_id=562532671]
+layout_mode = 0
+offset_left = 953.0
+offset_top = 48.0
+offset_right = 1045.0
+offset_bottom = 118.0

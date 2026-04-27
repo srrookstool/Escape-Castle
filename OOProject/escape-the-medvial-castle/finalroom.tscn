@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://4r2l7gyktlf1" path="res://finalroomscript.gd" id="2_0tn68"]
 [ext_resource type="PackedScene" uid="uid://yam23x1fkugy" path="res://DialogueBox.tscn" id="2_60omb"]
 [ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="4_oxswj"]
+[ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_8maq4"]
 
 [sub_resource type="Animation" id="Animation_oxswj"]
 length = 0.001
@@ -232,6 +233,9 @@ offset_right = -395.04797
 offset_bottom = 223.36101
 mouse_filter = 2
 texture = ExtResource("4_oxswj")
+
+[node name="RoomManager" type="Node" parent="." unique_id=496984610]
+script = ExtResource("5_8maq4")
 
 [connection signal="mouse_entered" from="bench" to="." method="_on_bench_mouse_entered"]
 [connection signal="mouse_exited" from="bench" to="." method="_on_bench_mouse_exited"]
