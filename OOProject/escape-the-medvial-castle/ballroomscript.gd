@@ -1,54 +1,75 @@
 extends Sprite2D
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	$Dialogue.show_text("... As you are walking down the spiraling stairs, 
-	you start to see a golden light appear and the faint sound of.... Classical music? 
-	- the stairs led you to a small door with a small looking window, you entered to find the ballroom.")
+    $Dialogue.show_text(
+        "As you walk down the spiraling stairs, a golden light begins to appear. "
+        "You hear the faint sound of classical music echoing through the stone walls.\n\n"
+        "The stairs lead you to a small wooden door with a tiny window. "
+        "You push it open and step into the ballroom..."
+    )
 
 
+# ---------------------------------------------------------
+# API CALL FUNCTION
+# ---------------------------------------------------------
+func send_action_to_api(letter: String, room_name: String):
+    var body = {
+        "room": room_name,
+        "action": letter
+    }
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+    $HTTPRequest.request(
+        "http://127.0.0.1:8000/action",
+        [],
+        true,
+        HTTPClient.METHOD_POST,
+        JSON.stringify(body)
+    )
 
+
+# ---------------------------------------------------------
+# HANDLE API RESPONSE
+# ---------------------------------------------------------
+func _on_HTTPRequest_request_completed(result, code, headers, body):
+    var data = JSON.parse_string(body)
+    if typeof(data) == TYPE_DICTIONARY:
+        $Dialogue.show_text(data.message)
+
+
+# ---------------------------------------------------------
+# BUTTON INTERACTIONS (API CALLS)
+# ---------------------------------------------------------
 
 func _on_piano_pressed() -> void:
-	$Dialogue.show_text("You see a grand piano in the corner of the ballroom, it is covered in dust, but it looks like it is still functional. 
-	You sit down and start to play the notes you found in the foyer and library, and as you play, 
-	you notice that the music starts to change...")
+    send_action_to_api("P", "Ballroom")
 
 func _on_frames_pressed() -> void:
-	$Dialogue.show_text("You see a large shattered frames barely hanging on the wall, 
-	the are images of music notes, they contain the notes C and E, and it is the only one that is not covered in dust.
-	 You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.")
-
+    send_action_to_api("F", "Ballroom")
 
 func _on_note_pressed() -> void:
-	$Dialogue.show_text("You see a small ripped note on the ground, badly worn, 
-	you pick it up and read the numbers on it- it contains two digits - 
-	piece of paper for the final code: {door_code[:2]}.")
+    send_action_to_api("N", "Ballroom")
 
 
-
-func _on_note_mouse_exited() -> void:
-	$note/AnimationPlayerN.play("hover_offN")
+# ---------------------------------------------------------
+# HOVER ANIMATIONS
+# ---------------------------------------------------------
 
 func _on_note_mouse_entered() -> void:
-	$note/AnimationPlayerN.play("hover_onN")
+    $note/AnimationPlayerN.play("hover_onN")
 
-
-func _on_frames_mouse_exited() -> void:
-	$frames/AnimationPlayerF.play("hover_offF")
+func _on_note_mouse_exited() -> void:
+    $note/AnimationPlayerN.play("hover_offN")
 
 
 func _on_frames_mouse_entered() -> void:
-	$frames/AnimationPlayerF.play("hover_onF")
+    $frames/AnimationPlayerF.play("hover_onF")
 
+func _on_frames_mouse_exited() -> void:
+    $frames/AnimationPlayerF.play("hover_offF")
 
-func _on_piano_mouse_exited() -> void:
-	$piano/AnimationPlayerP.play("hover_offP")
 
 func _on_piano_mouse_entered() -> void:
-	$piano/AnimationPlayerP.play("hover_onP")
+    $piano/AnimationPlayerP.play("hover_onP")
+
+func _on_piano_mouse_exited() -> void:
+    $piano/AnimationPlayerP.play("hover_offP")

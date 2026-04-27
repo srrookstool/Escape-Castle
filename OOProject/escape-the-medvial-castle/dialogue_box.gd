@@ -16,4 +16,3 @@ func show_text(text):
 	label.visible_characters = 10000
 	label.text = text
 	visible = true
-	$AnimationPlayer.play("typewriter")

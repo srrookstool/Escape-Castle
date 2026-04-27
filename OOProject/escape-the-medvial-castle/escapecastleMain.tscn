@@ -152,6 +152,8 @@ scale = Vector2(0.750651, 0.6347656)
 texture = ExtResource("1_liwtu")
 script = ExtResource("2_8yswt")
 
+[node name="HTTPRequest" type="HTTPRequest" parent="." unique_id=535154303]
+
 [node name="brokenframe" type="Button" parent="." unique_id=1708574383]
 z_index = 1
 offset_left = 420.0
@@ -224,6 +226,7 @@ offset_bottom = -31.50766
 mouse_filter = 2
 texture = ExtResource("4_onj73")
 
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
 [connection signal="mouse_entered" from="brokenframe" to="." method="_on_brokenframe_mouse_entered"]
 [connection signal="mouse_exited" from="brokenframe" to="." method="_on_brokenframe_mouse_exited"]
 [connection signal="pressed" from="brokenframe" to="." method="_on_brokenframe_pressed"]
