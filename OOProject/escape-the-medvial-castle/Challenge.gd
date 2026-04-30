@@ -1,4 +1,5 @@
 extends CanvasLayer
+signal challenge_challenge_solved(room_name)
 
 @onready var prompt_label = $Panel/prompt
 @onready var input_field = $Panel/input
@@ -6,7 +7,7 @@ extends CanvasLayer
 @onready var close_button = $Panel/close
 
 var current_room: String = ""
-var validator_func: Callable = Callable()  # just a stored function reference, NOT a lambda
+var validator_func: Callable = Callable()
 
 
 func _ready() -> void:
@@ -39,20 +40,27 @@ func start_challenge(prompt_text: String, room: String, validator: Callable) -> 
 
 
 func _on_submit_pressed() -> void:
-	var answer: String = input_field.text.strip_edges()  # <-- explicit type fixes the error
+	var answer: String = input_field.text.strip_edges()
 
 	if answer == "":
 		prompt_label.text = "Please enter an answer."
 		return
 
 	if validator_func != null and validator_func.call(answer):
+		print("✔ Correct answer for room:", current_room)
+
 		Gamestate.solve_puzzle(current_room)
-		RoomManager.check_room_completion()   # ⭐ REQUIRED FOR ROOM TRANSITIONS
+
+		print("✔ EMITTING challenge_challenge_solved for:", current_room)
+		emit_signal("challenge_challenge_solved", current_room)
+
+		print("✔ Calling RoomManager.check_room_completion()")
+		RoomManager.check_room_completion()
+
 		reset_challenge()
-
-
 	else:
-		prompt_label.text = "Incorrect. Try again."
+		Gamestate.modify_time(-60)
+		prompt_label.text = "Incorrect. You lost 1 minute. Try again."
 		input_field.text = ""
 		input_field.grab_focus()
 

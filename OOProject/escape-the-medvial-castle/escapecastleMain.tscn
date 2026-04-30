@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bqfnfhkqsbxuc" path="res://inventorybutton.png" id="6_eek51"]
 [ext_resource type="PackedScene" uid="uid://1en4tkjsyd54" path="res://InventoryPanel.tscn" id="7_5fnjs"]
 [ext_resource type="PackedScene" uid="uid://cwcy586ror3i8" path="res://Challenge.tscn" id="8_gpe3j"]
+[ext_resource type="PackedScene" uid="uid://bgwjxv3368gpj" path="res://timer.tscn" id="9_wsmn3"]
 
 [sub_resource type="Animation" id="Animation_tnfeh"]
 length = 0.001
@@ -317,6 +318,8 @@ offset_bottom = 302.44305
 
 [node name="Challenge" parent="." unique_id=926947470 instance=ExtResource("8_gpe3j")]
 visible = false
+
+[node name="TimerUI" parent="." unique_id=2085631115 instance=ExtResource("9_wsmn3")]
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
 [connection signal="mouse_entered" from="brokenframe" to="." method="_on_brokenframe_mouse_entered"]

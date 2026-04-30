@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bgwjxv3368gpj"]
+
+[ext_resource type="Script" uid="uid://b8wam548vplna" path="res://Timer.gd" id="1_ye2uk"]
+[ext_resource type="Texture2D" uid="uid://bbyg40n2ikhof" path="res://undertext.png" id="2_o6fnk"]
+[ext_resource type="Texture2D" uid="uid://cqducu6ee8i6s" path="res://sand.jpg" id="3_mxtnu"]
+
+[node name="TimerUI" type="CanvasLayer" unique_id=2085631115]
+script = ExtResource("1_ye2uk")
+
+[node name="GameTimer" type="Timer" parent="." unique_id=276902010]
+
+[node name="ProgressBar" type="TextureProgressBar" parent="." unique_id=540312395]
+offset_left = 691.0
+offset_top = -87.0
+offset_right = 4173.0
+offset_bottom = 1873.0
+scale = Vector2(0.3, 0.3)
+texture_under = ExtResource("2_o6fnk")
+texture_progress = ExtResource("3_mxtnu")
+
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]

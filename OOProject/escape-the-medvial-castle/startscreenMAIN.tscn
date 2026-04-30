@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ddoocktnig0yi" path="res://Spooky forest title .png" id="1_qi0vt"]
 [ext_resource type="Script" uid="uid://xoish31iwpog" path="res://startscreen_main.gd" id="2_ud16e"]
 [ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="3_tnfeh"]
+[ext_resource type="PackedScene" uid="uid://bgwjxv3368gpj" path="res://timer.tscn" id="4_7dxh1"]
 
 [sub_resource type="Animation" id="Animation_tnfeh"]
 length = 4.3
@@ -108,6 +109,8 @@ offset_bottom = 283.56924
 mouse_filter = 2
 texture = ExtResource("3_tnfeh")
 expand_mode = 1
+
+[node name="TimerUI" parent="." unique_id=2085631115 instance=ExtResource("4_7dxh1")]
 
 [connection signal="mouse_entered" from="startbutton" to="." method="_on_startbutton_mouse_entered"]
 [connection signal="mouse_exited" from="startbutton" to="." method="_on_startbutton_mouse_exited"]

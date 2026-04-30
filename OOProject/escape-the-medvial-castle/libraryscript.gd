@@ -3,6 +3,18 @@ extends Sprite2D
 @onready var Challenge = get_node("Challenge")
 @onready var Dialogue = get_node("Dialogue")
 
+# ---------------------------------------------------------
+# SIGNAL HANDLER (declare early so Callable can find it)
+# ---------------------------------------------------------
+func _on_challenge_solved(room_name):
+	if room_name == "Library":
+		print("LIBRARY PUZZLE SOLVED — checking room completion")
+		RoomManager.check_room_completion()
+
+
+# ---------------------------------------------------------
+# READY
+# ---------------------------------------------------------
 func _ready():
 	var desc := "The large oak grandfather clock creaks as it opens... " \
 	+ "you peek through, combing through spider webs to see walls lined with books and another room with no way out.\n\n" \
@@ -12,6 +24,9 @@ func _ready():
 
 	Dialogue.show_text(desc)
 	_init_library_puzzle()
+
+	# ⭐ CONNECT THE CORRECT SIGNAL NAME USING CALLABLE
+	Challenge.challenge_challenge_solved.connect(Callable(self, "_on_challenge_solved"))
 
 
 # ---------------------------------------------------------
@@ -50,8 +65,6 @@ func _handle_library_action(letter:String) -> void:
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "B")
 			Gamestate.mark_clue_inspected(room, "B")
-
-			# Add book to inventory
 			Gamestate.add_book_to_inventory("Romeo and Juliet")
 
 		"R":
@@ -59,8 +72,6 @@ func _handle_library_action(letter:String) -> void:
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "R")
 			Gamestate.mark_clue_inspected(room, "R")
-
-			# Add book to inventory
 			Gamestate.add_book_to_inventory("The Great Gatsby")
 
 		"E":
@@ -68,16 +79,12 @@ func _handle_library_action(letter:String) -> void:
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "E")
 			Gamestate.mark_clue_inspected(room, "E")
-
-			# Add book to inventory
 			Gamestate.add_book_to_inventory("Sherlock Holmes")
 
 		"F":
 			Dialogue.show_text("You see a large music note barely hanging on the wall. The image shows the note A. On the back, a small inscription reads: 'The key to the ballroom is in the music.'")
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "F")
-
-			# Add music note A to notes
 			Gamestate.record_music_note("A")
 
 		"D":
@@ -160,3 +167,9 @@ func _on_inventory_mouse_entered() -> void:
 
 func _on_inventory_mouse_exited() -> void:
 	$Inventory/GlowInv.play("hover_offI")
+
+
+func _on_challenge_challenge_solved(room_name: Variant) -> void:
+	if room_name == "Library":
+		print("LIBRARY PUZZLE SOLVED — checking room completion")
+		RoomManager.check_room_completion()

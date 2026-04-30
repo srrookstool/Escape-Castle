@@ -4,7 +4,9 @@ extends Sprite2D
 
 func _ready():
 	Gamestate.current_room_index = 0
+	TimerUI.GameTimer.start()
 
+	
 	$glowL.modulate = Color(1,1,1,0)
 	$glowF.modulate = Color(1,1,1,0)
 	$glowC.modulate = Color(1,1,1,0)
@@ -20,6 +22,9 @@ func _ready():
 
 	$Dialogue.show_text(desc)
 
+	# Connect the signal
+	Challenge.challenge_challenge_solved.connect(Callable(self, "_on_challenge_solved"))
+
 
 # ---------------------------------------------------------
 # CHALLENGE LOGIC 
@@ -33,6 +38,15 @@ func _start_foyer_challenge():
 		]
 
 	Challenge.start_challenge(prompt, "Foyer", validator)
+
+
+# ---------------------------------------------------------
+# SIGNAL HANDLER
+# ---------------------------------------------------------
+func _on_challenge_solved(room_name):
+	if room_name == "Foyer":
+		print("FOYER PUZZLE SOLVED — checking room completion")
+		RoomManager.check_room_completion()
 
 
 # ---------------------------------------------------------

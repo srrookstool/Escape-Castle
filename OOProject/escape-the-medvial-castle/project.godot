@@ -22,6 +22,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 Gamestate="*uid://dsaei3gc331ab"
 RoomManager="*uid://dk1k58hc0g54c"
+TimerUI="*uid://bgwjxv3368gpj"
 
 [dotnet]
 
