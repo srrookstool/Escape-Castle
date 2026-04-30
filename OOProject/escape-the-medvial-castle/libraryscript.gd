@@ -4,8 +4,6 @@ extends Sprite2D
 @onready var Dialogue = get_node("Dialogue")
 
 func _ready():
-	Gamestate.current_room_index = 1
-
 	var desc := "The large oak grandfather clock creaks as it opens... " \
 	+ "you peek through, combing through spider webs to see walls lined with books and another room with no way out.\n\n" \
 	+ "You have now entered the library — it is covered in spider webs, and the only light is through the large window barely covered by fallen drapes.\n\n" \
@@ -24,7 +22,7 @@ func _init_library_puzzle():
 
 
 # ---------------------------------------------------------
-# VALIDATOR (NO LAMBDAS)
+# VALIDATOR
 # ---------------------------------------------------------
 func _validate_library(answer: String) -> bool:
 	return answer.strip_edges().to_lower() == Gamestate.book_answer.to_lower()
@@ -48,28 +46,39 @@ func _handle_library_action(letter:String) -> void:
 	match letter:
 
 		"B":
-			Dialogue.show_text("You pull out a dusty copy of Romeo and Juliet. A paper falls out with a rose and the quote: 'A rose by any other name...'")
+			Dialogue.show_text("You pull out a dusty copy of Romeo and Juliet, and as you open it, you see a piece of paper fall out — it has an image of a rose on it, and the words 'A rose by any other name would smell as sweet' written on it.")
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "B")
 			Gamestate.mark_clue_inspected(room, "B")
 
+			# Add book to inventory
+			Gamestate.add_book_to_inventory("Romeo and Juliet")
+
 		"R":
-			Dialogue.show_text("You pull out The Great Gatsby. A paper falls out with a clock and the quote: 'So we beat on...'")
+			Dialogue.show_text("You pull out a worn copy of The Great Gatsby, and as you open it, a piece of paper falls out — it has an image of a clock on it, and the words 'So we beat on, boats against the current...' written on it.")
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "R")
 			Gamestate.mark_clue_inspected(room, "R")
 
+			# Add book to inventory
+			Gamestate.add_book_to_inventory("The Great Gatsby")
+
 		"E":
-			Dialogue.show_text("You pull out Sherlock Holmes. A paper falls out with a dagger and the quote: 'When you have eliminated the impossible...'")
+			Dialogue.show_text("You pull out a weathered edition of Sherlock Holmes, and as you open it, you see a piece of paper fall out — it has an image of a dagger on it, and the words 'When you have eliminated the impossible...' written on it.")
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "E")
 			Gamestate.mark_clue_inspected(room, "E")
 
+			# Add book to inventory
+			Gamestate.add_book_to_inventory("Sherlock Holmes")
+
 		"F":
-			Dialogue.show_text("You see a large music note barely hanging on the wall. It reads: 'The key to the ballroom is in the music.'")
+			Dialogue.show_text("You see a large music note barely hanging on the wall. The image shows the note A. On the back, a small inscription reads: 'The key to the ballroom is in the music.'")
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "F")
-			Gamestate.add_note("Music Notes", "A")
+
+			# Add music note A to notes
+			Gamestate.record_music_note("A")
 
 		"D":
 			if Gamestate.is_puzzle_solved(room):
@@ -84,29 +93,33 @@ func _handle_library_action(letter:String) -> void:
 				Dialogue.show_text(Gamestate.book_text)
 				_start_library_challenge()
 
+			return
+
 		_:
 			Dialogue.show_text("Nothing happens.")
 
-# BUTTONS — 
+
+# ---------------------------------------------------------
+# BUTTONS
+# ---------------------------------------------------------
 func _on_romeoandjuliet_pressed():
 	_handle_library_action("B")
-	RoomManager.check_room_completion()
+
 func _on_gatsby_pressed():
 	_handle_library_action("R")
-	RoomManager.check_room_completion()
+
 func _on_sherlock_pressed():
 	_handle_library_action("E")
-	RoomManager.check_room_completion()
+
 func _on_desk_pressed():
 	_handle_library_action("D")
-	RoomManager.check_room_completion()
+
 func _on_frame_pressed():
 	_handle_library_action("F")
-	RoomManager.check_room_completion()
+
 func _on_inventory_pressed():
 	$InventoryPanel.refresh_inventory()
 	$InventoryPanel.visible = true
-
 
 
 # ---------------------------------------------------------

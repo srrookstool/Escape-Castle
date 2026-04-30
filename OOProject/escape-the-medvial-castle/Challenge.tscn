@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://cwcy586ror3i8"]
 
 [ext_resource type="Script" uid="uid://2amsm4g5btfq" path="res://Challenge.gd" id="1_ghks4"]
+[ext_resource type="FontFile" uid="uid://ck6pr6vso32hi" path="res://Headstone DEMO.ttf" id="2_1wad8"]
 [ext_resource type="Texture2D" uid="uid://clrlldd2ds7x1" path="res://closeX.png" id="2_8h1oo"]
+[ext_resource type="Texture2D" uid="uid://gy74xcpxjpkd" path="res://submitbutton.png" id="4_71rl6"]
 
 [node name="Challenge" type="CanvasLayer" unique_id=926947470]
 script = ExtResource("1_ghks4")
@@ -10,21 +12,25 @@ script = ExtResource("1_ghks4")
 offset_left = 120.0
 offset_top = 51.0
 offset_right = 1091.0
-offset_bottom = 598.0
+offset_bottom = 455.0
 
 [node name="prompt" type="Label" parent="Panel" unique_id=2119157230]
 layout_mode = 0
-offset_left = 116.0
+offset_left = 19.0
 offset_top = 33.0
-offset_right = 856.0
-offset_bottom = 179.0
+offset_right = 827.0
+offset_bottom = 152.0
+theme_override_fonts/font = ExtResource("2_1wad8")
+theme_override_font_sizes/font_size = 30
 
 [node name="input" type="LineEdit" parent="Panel" unique_id=2106909371]
 layout_mode = 0
-offset_left = 290.0
-offset_top = 283.0
-offset_right = 674.5
-offset_bottom = 354.0
+offset_left = 155.0
+offset_top = 166.0
+offset_right = 798.0
+offset_bottom = 258.0
+theme_override_fonts/font = ExtResource("2_1wad8")
+theme_override_font_sizes/font_size = 31
 
 [node name="close" type="Button" parent="Panel" unique_id=2056497744]
 layout_mode = 0
@@ -38,9 +44,12 @@ flat = true
 
 [node name="submit" type="Button" parent="Panel" unique_id=272281829]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 391.0
-offset_right = 655.0
-offset_bottom = 504.0
+offset_left = 167.0
+offset_top = 127.0
+offset_right = 1711.0
+offset_bottom = 1159.0
+scale = Vector2(0.4, 0.4)
+icon = ExtResource("4_71rl6")
+flat = true
 
 [connection signal="pressed" from="Panel/submit" to="." method="_on_submit_pressed"]

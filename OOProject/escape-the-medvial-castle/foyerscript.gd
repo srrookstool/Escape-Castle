@@ -1,4 +1,5 @@
 extends Sprite2D
+
 @onready var Challenge = get_node("Challenge")
 
 func _ready():
@@ -24,10 +25,14 @@ func _ready():
 # CHALLENGE LOGIC 
 # ---------------------------------------------------------
 func _start_foyer_challenge():
-	var prompt := "Enter the correct time shown on the pendulum clock:"
-	var validator := func(answer:String) -> bool: return answer.strip_edges().to_upper().replace(" ", "") in [Gamestate.clock_time.to_upper().replace(" ", ""), Gamestate.clock_time.split(" ")[0].to_upper().replace(" ", "")]
-	Challenge.start_challenge(prompt, "Foyer", validator)
+	var prompt := "As you get near the clock it strikes a chilling midnight...\n\nPut the clock back at the correct time..."
+	var validator := func(answer:String) -> bool:
+		return answer.strip_edges().to_upper().replace(" ", "") in [
+			Gamestate.clock_time.to_upper().replace(" ", ""),
+			Gamestate.clock_time.split(" ")[0].to_upper().replace(" ", "")
+		]
 
+	Challenge.start_challenge(prompt, "Foyer", validator)
 
 
 # ---------------------------------------------------------
@@ -41,9 +46,15 @@ func _handle_foyer_action(action:String)->void:
 		"B":
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "B")
-			$Dialogue.show_text("You see a large music note barely hanging on the wall. " \
-			+ "It is the note G, and it is the only one not covered in dust. " \
-			+ "On the back, an inscription reads: 'The key to the ballroom is in the music.'")
+
+			# Add music note G to notes
+			Gamestate.record_music_note("G")
+
+			$Dialogue.show_text(
+                "You see a large music note barely hanging on the wall. "
+				+ "It is the note G, and it is the only one not covered in dust. "
+				+ "On the back, an inscription reads: 'The key to the ballroom is in the music.'"
+			)
 
 		"L":
 			var msg := "You see a large chest on the ground to your right— " \
@@ -52,17 +63,23 @@ func _handle_foyer_action(action:String)->void:
 			+ "The note reads the last two digits of the final code: %s." \
 			% Gamestate.door_code.substr(2,2)
 
-			if "Half Note" not in Gamestate.inventory:
-				Gamestate.inventory.append("Half Note")
+			# Add Half Note 1 to inventory
+			var digits = Gamestate.door_code.substr(2, 2)
+			Gamestate.add_half_note("1", digits)
 
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "L")
 			Gamestate.mark_clue_inspected(room, "L")
 			$Dialogue.show_text(msg)
 
+
 		"C":
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "C")
+
+			# Add clock time to notes
+			Gamestate.record_clock_time()
+
 			$Dialogue.show_text("You examine the antique pendulum clock closely...")
 
 		_:
@@ -74,11 +91,9 @@ func _handle_foyer_action(action:String)->void:
 # ---------------------------------------------------------
 func _on_brokenframe_pressed() -> void:
 	_handle_foyer_action("B")
-	RoomManager.check_room_completion()
 
 func _on_large_chest_pressed() -> void:
 	_handle_foyer_action("L")
-	RoomManager.check_room_completion()
 
 func _on_clock_pressed() -> void:
 	var room := "Foyer"
@@ -94,8 +109,6 @@ func _on_clock_pressed() -> void:
 
 	if not Challenge.visible:
 		_start_foyer_challenge()
-
-	RoomManager.check_room_completion()
 
 
 func _on_inventory_pressed() -> void:

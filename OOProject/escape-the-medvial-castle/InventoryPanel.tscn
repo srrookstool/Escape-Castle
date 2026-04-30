@@ -5,6 +5,14 @@
 [ext_resource type="FontFile" uid="uid://ck6pr6vso32hi" path="res://Headstone DEMO.ttf" id="3_itn5s"]
 [ext_resource type="Texture2D" uid="uid://clrlldd2ds7x1" path="res://closeX.png" id="3_xd0c8"]
 
+[sub_resource type="Theme" id="Theme_itn5s"]
+default_font = ExtResource("3_itn5s")
+default_font_size = 40
+
+[sub_resource type="Theme" id="Theme_qtdbd"]
+default_font = ExtResource("3_itn5s")
+default_font_size = 40
+
 [node name="Control" type="Control" unique_id=672247069]
 layout_mode = 3
 anchors_preset = 0
@@ -38,6 +46,7 @@ offset_left = 41.0
 offset_top = 141.0
 offset_right = 991.0
 offset_bottom = 371.0
+theme = SubResource("Theme_itn5s")
 
 [node name="NotesLabel" type="Label" parent="." unique_id=6755184]
 layout_mode = 0
@@ -47,7 +56,7 @@ offset_right = 946.0
 offset_bottom = 516.0
 theme_override_fonts/font = ExtResource("3_itn5s")
 theme_override_font_sizes/font_size = 40
-text = "Notes taken:"
+text = "Object notes:"
 
 [node name="NotesVbox" type="VBoxContainer" parent="." unique_id=1371493957]
 layout_mode = 0
@@ -55,6 +64,7 @@ offset_left = 57.0
 offset_top = 506.0
 offset_right = 991.0
 offset_bottom = 635.0
+theme = SubResource("Theme_qtdbd")
 
 [node name="close" type="Button" parent="." unique_id=562532671]
 layout_mode = 0

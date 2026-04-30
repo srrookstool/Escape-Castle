@@ -516,13 +516,13 @@ desk=Puzzle("A Clutery Desk (D)",
             book_answer,
             letter="D")
 musicnote_A=Noteable("Inscripted Frame (F)", 
-                   "You see a large music note barely hanging on the wall, you go closer to the, and it is covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                   "You see a large music note barely hanging on the wall, you go closer to the, and it is covered in dust. The image shows the note of A. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
                    "Music Notes", "A",
                    letter="F")
 
 #Ballroom objects
 musicenote_CE = Noteable("Framed Music Notes (F)", 
-                     "You see a large music note barely hanging on the wall, it is the notes C and E, and it is the only one that is not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
+                     "You see a large music note frames lying on the ground, it is the notes C and E, and you notice they are not covered in dust. You examine it, and you notice that there is a small inscription on the back of the note that says 'The key to the ballroom is in the music'.",
                      "Music Notes", ["C", "E"],
                      letter="F")
 FCnote2=Clue("A small ripped note (N)", 

@@ -1,4 +1,5 @@
 extends Sprite2D
+
 @onready var Challenge = get_node("Challenge")
 
 func _ready():
@@ -33,20 +34,33 @@ func _handle_ballroom_action(letter:String)->void:
 	match letter:
 
 		"F":
-			var msg := "You see a framed set of music notes — C and E — barely hanging on the wall."
+			var msg := "You see a large music note frame lying on the ground — the notes C and E. " \
+			+ "They are the only ones not covered in dust. On the back, an inscription reads: " \
+			+ "'The key to the ballroom is in the music.'"
+
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "F")
 			Gamestate.mark_clue_inspected(room, "F")
-			Gamestate.add_note("Music Notes", "C")
-			Gamestate.add_note("Music Notes", "E")
+
+			# Add music notes
+			Gamestate.record_music_note("C")
+			Gamestate.record_music_note("E")
+
 			$Dialogue.show_text(msg)
 
 		"N":
 			var first_two := Gamestate.door_code.substr(0,2)
 			var msg2 := "You find a ripped note on the ground. It reads: %s." % first_two
+
 			Gamestate.modify_time(-5)
 			Gamestate.mark_examined(room, "N")
 			Gamestate.mark_clue_inspected(room, "N")
+
+			# Add Half Note #2 to inventory
+			var digits = Gamestate.door_code.substr(0, 2)
+			Gamestate.add_half_note("2", digits)
+
+
 			$Dialogue.show_text(msg2)
 
 		"P":
@@ -62,7 +76,7 @@ func _handle_ballroom_action(letter:String)->void:
 				_start_ballroom_challenge()
 				return
 
-			# ⭐ ADD THIS — THIS IS THE FIX
+			# Puzzle solved AFTER correct validator input
 			Gamestate.solve_puzzle("Ballroom")
 			RoomManager.check_room_completion()
 
@@ -75,15 +89,12 @@ func _handle_ballroom_action(letter:String)->void:
 # ---------------------------------------------------------
 func _on_frames_pressed():
 	_handle_ballroom_action("F")
-	RoomManager.check_room_completion()
 
 func _on_note_pressed():
 	_handle_ballroom_action("N")
-	RoomManager.check_room_completion()
 
 func _on_piano_pressed():
 	_handle_ballroom_action("P")
-	RoomManager.check_room_completion()
 
 func _on_inventory_pressed():
 	$InventoryPanel.refresh_inventory()
