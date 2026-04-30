@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://bwj2sk0mdickh"]
+[gd_scene format=3 uid="uid://3udallpkeagq"]
 
-[ext_resource type="Texture2D" uid="uid://ddoocktnig0yi" path="res://Spooky forest title .png" id="1_qi0vt"]
-[ext_resource type="Script" uid="uid://xoish31iwpog" path="res://startscreen_main.gd" id="2_ud16e"]
-[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="3_tnfeh"]
+[ext_resource type="Texture2D" uid="uid://cifpn3yht3pp4" path="res://YOULOSE.png" id="1_dv5l4"]
+[ext_resource type="Script" uid="uid://bv0ne8xgll03f" path="res://youlosescene.gd" id="1_nd8cn"]
+[ext_resource type="Texture2D" uid="uid://bmo6jmrirmoyh" path="res://gold_glow.tres" id="2_nd8cn"]
 
 [sub_resource type="Animation" id="Animation_tnfeh"]
 length = 4.3
@@ -74,42 +74,43 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_jsqps"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0vdfy"]
 _data = {
 &"RESET": SubResource("Animation_tnfeh"),
 &"hover_off": SubResource("Animation_jsqps"),
 &"hover_on": SubResource("Animation_7dxh1")
 }
 
-[node name="SpookyForestTitle" type="Sprite2D" unique_id=1711716392]
-position = Vector2(574, 330)
-scale = Vector2(0.74869794, 0.6347656)
-texture = ExtResource("1_qi0vt")
-script = ExtResource("2_ud16e")
+[node name="Node2D" type="Node2D" unique_id=507692545]
+script = ExtResource("1_nd8cn")
 
-[node name="startbutton" type="Button" parent="." unique_id=99906558]
-offset_left = -197.67651
-offset_top = 187.47076
-offset_right = 156.2713
-offset_bottom = 278.84308
-flat = true
+[node name="Youlose" type="Sprite2D" parent="." unique_id=1631413449]
+position = Vector2(570, 329)
+scale = Vector2(1.479977, 1.479977)
+texture = ExtResource("1_dv5l4")
 
-[node name="GlowAnimator" type="AnimationPlayer" parent="startbutton" unique_id=762894892]
-libraries/ = SubResource("AnimationLibrary_jsqps")
-playback_auto_capture = false
-
-[node name="glow" type="TextureRect" parent="." unique_id=1891923440]
+[node name="glow" type="TextureRect" parent="." unique_id=1840559304]
 self_modulate = Color(1, 1, 1, 0)
 z_index = 1
-offset_left = -197.67653
-offset_top = 182.7446
-offset_right = 156.27129
-offset_bottom = 283.56924
+offset_left = 343.0
+offset_top = 528.0
+offset_right = 820.0
+offset_bottom = 625.0
 mouse_filter = 2
-texture = ExtResource("3_tnfeh")
+texture = ExtResource("2_nd8cn")
 expand_mode = 1
 
-[connection signal="mouse_entered" from="startbutton" to="." method="_on_startbutton_mouse_entered"]
-[connection signal="mouse_exited" from="startbutton" to="." method="_on_startbutton_mouse_exited"]
-[connection signal="pressed" from="startbutton" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="startbutton" to="." method="_on_startbutton_pressed"]
+[node name="restartbutton" type="Button" parent="." unique_id=1474196098]
+offset_left = 344.0
+offset_top = 528.0
+offset_right = 819.0
+offset_bottom = 633.0
+flat = true
+
+[node name="GlowAnimator" type="AnimationPlayer" parent="restartbutton" unique_id=1403086029]
+libraries/ = SubResource("AnimationLibrary_0vdfy")
+playback_auto_capture = false
+
+[connection signal="mouse_entered" from="restartbutton" to="." method="_on_restartbutton_mouse_entered"]
+[connection signal="mouse_exited" from="restartbutton" to="." method="_on_restartbutton_mouse_exited"]
+[connection signal="pressed" from="restartbutton" to="." method="_on_restartbutton_pressed"]

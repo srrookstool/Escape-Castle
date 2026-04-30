@@ -1,22 +1,34 @@
 extends Node
 
+var _is_changing := false
+
 func check_room_completion():
-    var room := Gamestate.get_current_room()
+    var i := Gamestate.current_room_index
 
-    match room:
+    # FOYER → LIBRARY
+    if i == 0 and Gamestate.is_puzzle_solved("Foyer"):
+        _change_room("res://Library.tscn")
+        return
 
-        "Foyer":
-            if Gamestate.is_puzzle_solved("Foyer"):
-                get_tree().change_scene_to_file("res://Library.tscn")
+    # LIBRARY → BALLROOM
+    if i == 1 and Gamestate.is_puzzle_solved("Library"):
+        _change_room("res://Ballroom.tscn")
+        return
 
-        "Library":
-            if Gamestate.is_puzzle_solved("Library"):
-                get_tree().change_scene_to_file("res://Ballroom.tscn")
+    # BALLROOM → FINAL ROOM
+    if i == 2 and Gamestate.is_puzzle_solved("Ballroom"):
+        _change_room("res://finalroom.tscn")
+        return
 
-        "Ballroom":
-            if Gamestate.is_puzzle_solved("Ballroom"):
-                get_tree().change_scene_to_file("res://Dungeon.tscn")
+    # DUNGEON → ESCAPED
+    if i == 3 and Gamestate.is_puzzle_solved("Dungeon"):
+        _change_room("res://escapedscene.tscn")
+        return
 
-        "Dungeon":
-            if Gamestate.is_puzzle_solved("Dungeon"):
-                get_tree().change_scene_to_file("res://WinScreen.tscn")
+
+func _change_room(path: String):
+    if _is_changing:
+        return
+
+    _is_changing = true
+    get_tree().change_scene_to_file(path)

@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_8maq4"]
 [ext_resource type="PackedScene" uid="uid://1en4tkjsyd54" path="res://InventoryPanel.tscn" id="6_u4sit"]
 [ext_resource type="Texture2D" uid="uid://bqfnfhkqsbxuc" path="res://inventorybutton.png" id="7_dhxmg"]
-[ext_resource type="PackedScene" uid="uid://cwcy586ror3i8" path="res://Challenge.tscn" id="8_dhxmg"]
 
 [sub_resource type="Animation" id="Animation_oxswj"]
 length = 0.001
@@ -197,7 +196,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_m057k"]
 resource_name = "hover_onI"
-length = 3.5
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -321,9 +320,6 @@ flat = true
 
 [node name="GlowInv" type="AnimationPlayer" parent="Inventory" unique_id=1846944746]
 libraries/ = SubResource("AnimationLibrary_dhxmg")
-
-[node name="Challenge" parent="." unique_id=926947470 instance=ExtResource("8_dhxmg")]
-visible = false
 
 [connection signal="mouse_entered" from="bench" to="." method="_on_bench_mouse_entered"]
 [connection signal="mouse_exited" from="bench" to="." method="_on_bench_mouse_exited"]

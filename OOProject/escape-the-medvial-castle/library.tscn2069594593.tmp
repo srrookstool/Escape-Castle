@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://dk1k58hc0g54c" path="res://RoomManager.gd" id="5_2jcn1"]
 [ext_resource type="Texture2D" uid="uid://bqfnfhkqsbxuc" path="res://inventorybutton.png" id="6_0nmpb"]
 [ext_resource type="PackedScene" uid="uid://1en4tkjsyd54" path="res://InventoryPanel.tscn" id="7_xna2n"]
-[ext_resource type="PackedScene" uid="uid://cwcy586ror3i8" path="res://Challenge.tscn" id="8_5vx0l"]
 
 [sub_resource type="Animation" id="Animation_x5gbn"]
 length = 0.16666667
@@ -301,7 +300,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_m057k"]
 resource_name = "hover_onI"
-length = 3.5
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -377,6 +376,12 @@ flat = true
 
 [node name="AnimationPlayerF" type="AnimationPlayer" parent="frame" unique_id=1056465466]
 libraries/ = SubResource("AnimationLibrary_evjuo")
+
+[node name="Dialogue" parent="." unique_id=1440113975 instance=ExtResource("2_iuo7c")]
+offset_left = -729.2661
+offset_top = 120.61157
+offset_right = 49.41919
+offset_bottom = 491.20905
 
 [node name="glowR" type="TextureRect" parent="." unique_id=1153470651]
 modulate = Color(1, 1, 1, 0)
@@ -459,15 +464,6 @@ offset_left = -529.54034
 offset_top = -335.55695
 offset_right = 627.45966
 offset_bottom = 302.44305
-
-[node name="Dialogue" parent="." unique_id=1440113975 instance=ExtResource("2_iuo7c")]
-offset_left = -729.2662
-offset_top = 120.61157
-offset_right = 49.41913
-offset_bottom = 491.20905
-
-[node name="Challenge" parent="." unique_id=926947470 instance=ExtResource("8_5vx0l")]
-visible = false
 
 [connection signal="mouse_entered" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_entered"]
 [connection signal="mouse_exited" from="romeoandjuliet" to="." method="_on_romeoandjuliet_mouse_exited"]

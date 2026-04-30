@@ -26,16 +26,6 @@ offset_top = 283.0
 offset_right = 674.5
 offset_bottom = 354.0
 
-[node name="close" type="Button" parent="Panel" unique_id=2056497744]
-layout_mode = 0
-offset_left = 793.0
-offset_top = -38.0
-offset_right = 1825.0
-offset_bottom = 994.0
-scale = Vector2(0.2, 0.2)
-icon = ExtResource("2_8h1oo")
-flat = true
-
 [node name="submit" type="Button" parent="Panel" unique_id=272281829]
 layout_mode = 0
 offset_left = 307.0
@@ -43,4 +33,13 @@ offset_top = 391.0
 offset_right = 655.0
 offset_bottom = 504.0
 
-[connection signal="pressed" from="Panel/submit" to="." method="_on_submit_pressed"]
+[node name="close" type="Button" parent="." unique_id=2056497744]
+offset_left = 919.0
+offset_top = 20.999996
+offset_right = 1951.0
+offset_bottom = 1053.0
+scale = Vector2(0.2, 0.2)
+icon = ExtResource("2_8h1oo")
+flat = true
+
+[connection signal="pressed" from="close" to="." method="_on_close_pressed"]

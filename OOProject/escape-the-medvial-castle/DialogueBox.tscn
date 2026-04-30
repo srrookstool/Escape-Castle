@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://yam23x1fkugy"]
 
 [ext_resource type="Script" uid="uid://cksursewq3r8i" path="res://dialogue_box.gd" id="1_k4804"]
-[ext_resource type="FontFile" uid="uid://bbwlqo8dkea7p" path="res://Forgore.otf" id="2_drog7"]
 [ext_resource type="Texture2D" uid="uid://dwisued2r081o" path="res://paper.jpg" id="2_xetfl"]
+[ext_resource type="FontFile" uid="uid://ck6pr6vso32hi" path="res://Headstone DEMO.ttf" id="3_xetfl"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xetfl"]
 texture = ExtResource("2_xetfl")
@@ -34,7 +34,7 @@ theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/line_separation = 4
-theme_override_fonts/normal_font = ExtResource("2_drog7")
+theme_override_fonts/normal_font = ExtResource("3_xetfl")
 theme_override_font_sizes/normal_font_size = 45
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1828638933]

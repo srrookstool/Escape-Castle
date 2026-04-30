@@ -1,9 +1,5 @@
 extends Node
-class_name GameState
 
-# ---------------------------------------------------------
-# PLAYER DATA
-# ---------------------------------------------------------
 var player_name: String = ""
 var inventory: Array[String] = []
 var notes := {}
@@ -11,27 +7,26 @@ var notes := {}
 var start_time := 1800
 var time_remaining := 1800
 
-# ---------------------------------------------------------
-# ROOM PROGRESSION
-# ---------------------------------------------------------
 var rooms := ["Foyer", "Library", "Ballroom", "Dungeon"]
 var current_room_index := 0
-
 var room_solved := [false, false, false, false]
 var can_move_back := true
 
-# ---------------------------------------------------------
-# RANDOMIZED PUZZLE ANSWERS
-# ---------------------------------------------------------
 var clock_time := ""
 var door_code := ""
-var book_answer := ""
+
+# ------------------------------
+# LIBRARY PUZZLE VARIABLES
+# ------------------------------
+var book_answer : String = ""
+var book_clue : String = ""     
+var book_text : String = ""     
+
+
 var book_clue_word := ""
+
 var piano_answer := "CAGE"
 
-# ---------------------------------------------------------
-# OBJECT STATE TRACKING
-# ---------------------------------------------------------
 var examined_objects := {}
 var inspected_clues := {}
 
@@ -42,15 +37,9 @@ var puzzle_solved := {
 	"Dungeon": false
 }
 
-# ---------------------------------------------------------
-# SPECIAL INTERACT RANDOMIZATION
-# ---------------------------------------------------------
 var throne_effect := ""
 var mirror_effect := ""
 
-# ---------------------------------------------------------
-# INITIALIZATION
-# ---------------------------------------------------------
 func _ready():
 	randomize()
 	_generate_random_values()
@@ -85,9 +74,6 @@ func _reset_object_tracking():
 		examined_objects[room] = {}
 		inspected_clues[room] = {}
 
-# ---------------------------------------------------------
-# PLAYER FUNCTIONS
-# ---------------------------------------------------------
 func set_player_name(name: String):
 	player_name = name
 
@@ -108,9 +94,8 @@ func modify_time(seconds: int):
 func restore_time():
 	time_remaining = start_time
 
-# ---------------------------------------------------------
-# ROOM FUNCTIONS
-# ---------------------------------------------------------
+
+#GO BACK N FOWARD FUNCTIONS
 func get_current_room() -> String:
 	return rooms[current_room_index]
 
@@ -124,53 +109,38 @@ func move_back():
 		current_room_index -= 1
 
 # ---------------------------------------------------------
-# OBJECT STATE FUNCTIONS
+# EXAMINED OBJECT LOGIC
 # ---------------------------------------------------------
+
 func mark_examined(room: String, letter: String):
+	if not examined_objects.has(room):
+		examined_objects[room] = {}
 	examined_objects[room][letter] = true
 
 func mark_clue_inspected(room: String, letter: String):
+	if not inspected_clues.has(room):
+		inspected_clues[room] = {}
 	inspected_clues[room][letter] = true
 
 func is_examined(room: String, letter: String) -> bool:
-	return examined_objects[room].get(letter, false)
-
-func is_clue_inspected(room: String, letter: String) -> bool:
-	return inspected_clues[room].get(letter, false)
+	return examined_objects.get(room, {}).get(letter, false)
 
 func all_examined(room: String, letters: Array) -> bool:
+	var room_dict = examined_objects.get(room, {})
 	for letter in letters:
-		if not is_examined(room, letter):
+		if not room_dict.get(letter, false):
 			return false
 	return true
 
-func all_clues_inspected(room: String, letters: Array) -> bool:
-	for letter in letters:
-		if not is_clue_inspected(room, letter):
-			return false
-	return true
-
-# ---------------------------------------------------------
-# CHALLENGE START LOGIC (NEW)
-# ---------------------------------------------------------
 func should_start_challenge(room: String, required_letters: Array) -> bool:
-	# Challenge starts ONLY when:
-	# 1. All required objects are examined
-	# 2. Puzzle is NOT already solved
 	return all_examined(room, required_letters) and not is_puzzle_solved(room)
 
-# ---------------------------------------------------------
-# PUZZLE FUNCTIONS
-# ---------------------------------------------------------
 func solve_puzzle(room: String):
 	puzzle_solved[room] = true
 
 func is_puzzle_solved(room: String) -> bool:
 	return puzzle_solved[room]
 
-# ---------------------------------------------------------
-# GAME STATE CHECK
-# ---------------------------------------------------------
 func is_game_won() -> bool:
 	for room in rooms:
 		if not puzzle_solved[room]:
